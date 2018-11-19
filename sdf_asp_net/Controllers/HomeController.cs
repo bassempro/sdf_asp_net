@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sdf_asp_net.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,7 +11,8 @@ namespace sdf_asp_net.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            MockUpService mockUpService = MockUpService.Instance;
+            return View(mockUpService.getProjects());
         }
 
         public ActionResult About()
