@@ -1,0 +1,25 @@
+﻿@model sdf_asp_net.Models.Project
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<fieldset>
+    <h1>New Project</h1>
+    <form id="form1" method="post" action="@Url.Action("Create", "Projects")"
+          enctype="application/x-www-form-urlencoded">
+        <br />
+        <div>
+            <label for="Name">Project name</label>
+        </div>
+        <br />
+        <div>
+            <input name="Name" type="text" />
+        </div>
+        <br />
+        <div>
+            <input type="submit" value="Submit" />
+        </div>
+    </form>
+</fieldset>
+

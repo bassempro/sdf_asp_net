@@ -1,6 +1,27 @@
-﻿@{
+﻿@model sdf_asp_net.ViewModels.ProjectsViewModel
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Home Page";
 }
 
-<p>TEST</p>
+<form style="display: inline" action="/Projects/new" method="get">
+    <button>Create new Project</button>
+</form>
+
+<ul>
+
+    @foreach (var project in Model.projects)
+    {
+        <fieldset>
+            <h1>@project.Name</h1>
+            <form id="form1" method="post" action="@Url.Action("Home", "Index")"
+                  enctype="application/x-www-form-urlencoded">
+                <div>
+                    <input type="submit" value="View" />
+                </div>
+            </form>
+        </fieldset>
+    }
+</ul>
+
+
