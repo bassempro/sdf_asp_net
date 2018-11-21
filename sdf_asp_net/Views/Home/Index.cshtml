@@ -5,23 +5,22 @@
 }
 
 <form style="display: inline" action="/Projects/new" method="get">
-    <button>Create new Project</button>
+    <button class="btn btn-primary">Neues Projekt </button><br /><br />
 </form>
 
-<ul>
+<ul class="list-group">
 
     @foreach (var project in Model.projects)
     {
-        <fieldset>
+        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-dark">
             <h1>@project.Name</h1>
-            <form id="form1" method="post" action="@Url.Action("Home", "Index")"
-                  enctype="application/x-www-form-urlencoded">
-                <div>
-                    <input type="submit" value="View" />
-                </div>
-            </form>
-        </fieldset>
+            <div class="btn-group mr-2" role="group" aria-label="First group">
+                <form id="form1" method="post" action="@Url.Action("View", "Projects" , new { id = @project.Id })"><button type="button" class="btn btn-primary">Anzeigen</button></form>
+                <form id="form1" method="post" action="@Url.Action("Delete", "Projects", new { id = @project.Id })"><button type="submit" class="btn btn-dark">Löschen</button></form>
+            </div>
+
+        </li>
+        <br />
     }
 </ul>
-
 

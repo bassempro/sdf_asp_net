@@ -1,9 +1,6 @@
 ﻿using sdf_asp_net.Models;
 using sdf_asp_net.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+
 
 namespace sdf_asp_net.Services
 {
@@ -13,16 +10,31 @@ namespace sdf_asp_net.Services
 
         private static MockUpService instance = null;
         private static readonly object padlock = new object();
+        private int currentID = 0;
 
         MockUpService()
         {
             projectsViewModel = new ProjectsViewModel();
-            Project dummyProject01 = new Project();
-            dummyProject01.Name = "Pujans Nasenverkleinerung";
-            Project dummyProject02 = new Project();
-            dummyProject02.Name = "Cihans Barmitzwa";
-            projectsViewModel.projects.Add(dummyProject01);
-            projectsViewModel.projects.Add(dummyProject02);
+            Project dummyProject01 = new Project
+            {
+                Name = "Pujans Nasenverkleinerung"
+            };
+            Project dummyProject02 = new Project
+            {
+                Name = "Cihans Barmitzwa"
+            };
+            Project dummyProject03 = new Project
+            {
+                Name = "Project X"
+            };
+            Project dummyProject04 = new Project
+            {
+                Name = "Sarouch party"
+            };
+            this.AddProject(dummyProject01);
+            this.AddProject(dummyProject02);
+            this.AddProject(dummyProject03);
+            this.AddProject(dummyProject04);
         }
 
         public static MockUpService Instance
@@ -41,14 +53,27 @@ namespace sdf_asp_net.Services
         }
 
 
-        public ProjectsViewModel getProjects()
+        public ProjectsViewModel GetProjects()
         {
             return this.projectsViewModel;
         }
 
-        public void addProject(Project newProject)
+        public void AddProject(Project newProject)
         {
+            newProject.Id = this.currentID;
+            this.currentID++;
             this.projectsViewModel.projects.Add(newProject);
+        }
+
+        public void DeleteProject(int id)
+        {
+            for (int i = 0; i < this.projectsViewModel.projects.Count; i++)
+            {
+                if (this.projectsViewModel.projects[i].Id == id)
+                {
+                    this.projectsViewModel.projects.RemoveAt(i);
+                }
+            }
         }
 
     }
