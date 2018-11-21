@@ -10,11 +10,6 @@ namespace sdf_asp_net.Models
         public string Email { get; set; }
     }
 
-    public class ExternalLoginListViewModel
-    {
-        public string ReturnUrl { get; set; }
-    }
-
     public class SendCodeViewModel
     {
         public string SelectedProvider { get; set; }

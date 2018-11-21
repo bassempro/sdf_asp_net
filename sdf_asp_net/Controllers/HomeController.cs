@@ -7,12 +7,13 @@ using System.Web.Mvc;
 
 namespace sdf_asp_net.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         public ActionResult Index()
         {
             MockUpService mockUpService = MockUpService.Instance;
-            return View(mockUpService.getProjects());
+            return View(mockUpService.GetProjects());
         }
 
         public ActionResult About()

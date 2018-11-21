@@ -5,20 +5,25 @@
 }
 
 <fieldset>
-    <h1>New Project</h1>
+    <h1>Neues Projekt</h1>
     <form id="form1" method="post" action="@Url.Action("Create", "Projects")"
           enctype="application/x-www-form-urlencoded">
         <br />
-        <div>
-            <label for="Name">Project name</label>
+        <div class="form-group">
+            <div class="col-md-10">
+                <div>
+                    <label for="Name">Projektname:</label>
+                </div>
+                <br />
+                <div>
+                    <input name="Name" type="text" />
+                </div>
+            </div>
         </div>
-        <br />
-        <div>
-            <input name="Name" type="text" />
-        </div>
-        <br />
-        <div>
-            <input type="submit" value="Submit" />
+        <div class="form-group">
+            <div class="col-md-10">
+                <input type="submit" value="Submit" class="btn btn-primary" />
+            </div>
         </div>
     </form>
 </fieldset>
