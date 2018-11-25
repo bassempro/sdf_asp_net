@@ -1,0 +1,65 @@
+﻿@model sdf_asp_net.Models.ProjectModel
+
+@{
+    ViewBag.Title = "DetailView";
+}
+<div class="col-md-12">
+    <a href="@Url.Action("", "Project")" class="btn btn-primary float-right btn-lg active" role="button" aria-pressed="true">User einladen</a>
+    <a href="@Url.Action("", "Project")" class="btn btn-primary float-right btn-lg active" role="button" aria-pressed="true">Zum Chatroom</a>
+</div>
+    <h2>Detailansicht</h2>
+
+    <div>
+        <h6><b>Dashboard zum Projekt:</b> @Html.DisplayFor(model => model.Name)</h6>
+        <h6><b>@Html.DisplayNameFor(model => model.Description):</b> @Html.DisplayFor(model => model.Description)</h6>
+
+            <hr />
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-9">
+                    </div>
+                    <div class="col-4">
+                        <h2>Messageboard</h2>
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Message 1</h5>
+                                    <small>1 days ago</small>
+                                </div>
+                                <p class="mb-1">Cihan hat einen kleinen, uff was ist passiert?</small>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Message 2</h5>
+                                    <small>3 days ago</small>
+                                </div>
+                                <p class="mb-1">Kevin hat einen kleinen, uff was ist passiert?</small>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Message 3</h5>
+                                    <small>5 days ago</small>
+                                </div>
+                                <p class="mb-1">Pujan hat einen riesen yarro, uff was ist passiert?</small>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h2>Userlist</h2>
+                        <ul class="list-group">
+                            <li class="list-group-item">Cihan das Kind</li>
+                            <li class="list-group-item">Kevin W aka Anabolspritze</li>
+                            <li class="list-group-item">Friedrich</li>
+                            <li class="list-group-item">Jonas</li>
+                            <li class="list-group-item">Kalle</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+</div>
+    <p>
+        @Html.ActionLink("Bearbeiten", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Zurück zu der Projektliste", "Index")
+    </p>
