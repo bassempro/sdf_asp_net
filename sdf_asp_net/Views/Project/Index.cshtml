@@ -1,0 +1,33 @@
+﻿@model System.Data.DataTable
+@{
+    ViewBag.Title = "Projekte";
+}
+<div class="col-md-12">
+    <a href="@Url.Action("Create", "Project")" class="btn btn-primary float-right btn-lg active" role="button" aria-pressed="true">Projekt erstellen</a>
+</div>
+<h2>Projekte</h2>
+
+<hr />
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <tr>
+                <th>Name</th>
+                <th>Beschreibung</th>
+                <th>Funktionen</th>
+
+            </tr>
+            @for (int i = 0; i < Model.Rows.Count; i++)
+            {
+                <tr>
+                    <td>@Model.Rows[i][1]</td>
+                    <td>@Model.Rows[i][2]</td>
+                    <td>
+                        <a href="@Url.Action("DetailView", "Project", new { @id=Model.Rows[i][0]})" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Anzeigen</a>
+                        <a href="@Url.Action("Edit", "Project", new { @id=Model.Rows[i][0]})" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Bearbeiten</a>
+                        <a href="@Url.Action("Delete", "Project", new { @id=Model.Rows[i][0]})" class="btn btn-danger" role="button" aria-pressed="true">Löschen</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
