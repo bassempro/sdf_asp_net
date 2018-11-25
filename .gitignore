@@ -323,3 +323,4 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/sdf_asp_net/App_Data
