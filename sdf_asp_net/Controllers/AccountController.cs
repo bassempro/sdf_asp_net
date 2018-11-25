@@ -163,7 +163,7 @@ namespace sdf_asp_net.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Konto bestätigen", "Bitte bestätigen Sie Ihr Konto. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Project");
                 }
                 AddErrors(result);
             }
@@ -392,7 +392,7 @@ namespace sdf_asp_net.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Manage");
         }
 
         //
@@ -449,7 +449,7 @@ namespace sdf_asp_net.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Project");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult
