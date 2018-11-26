@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Data;
 using System.Data.SqlClient;
 using sdf_asp_net.Models;
+using Microsoft.AspNet.Identity.Owin;
+using System.Linq;
+using System.Collections;
 
 namespace sdf_asp_net.Controllers
 {
@@ -14,6 +15,23 @@ namespace sdf_asp_net.Controllers
     public class ProjectController : Controller
     {
         string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=aspnet-sdf_asp_net-20181114091107;Integrated Security=True";
+        private ApplicationUserManager _userManager;
+
+        public ProjectController()
+        {
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
         //Lists all Projects 
         // GET: Project
         [HttpGet]
@@ -33,7 +51,16 @@ namespace sdf_asp_net.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            return View(new ProjectModel());
+            var context = new ApplicationDbContext();
+            var allUsers = context.Users.ToList();
+            string[] user = new string[allUsers.Count];
+            for (int i = 0; i < allUsers.Count; i++)
+            {
+                user[i] = allUsers[i].UserName;
+            }
+
+
+            return View((object)user);
         }
 
         public ActionResult DetailView(int id)
@@ -53,6 +80,7 @@ namespace sdf_asp_net.Controllers
                 projectModel.Id = Convert.ToInt32(dtblProject.Rows[0][0].ToString());
                 projectModel.Name = dtblProject.Rows[0][1].ToString();
                 projectModel.Description = dtblProject.Rows[0][2].ToString();
+                projectModel.Member = dtblProject.Rows[0][3].ToString();
 
                 return View(projectModel);
             }
@@ -62,15 +90,28 @@ namespace sdf_asp_net.Controllers
 
         // POST: Project/Create
         [HttpPost]
-        public ActionResult Create(ProjectModel projectModel)
+        public ActionResult Create(string name, string description, FormCollection collection)
         {
+            string usersToAdd = "";
+            var context = new ApplicationDbContext();
+            var allUsers = context.Users.ToList();
+            for (int i = 0; i < allUsers.Count; i++)
+            {
+                if (collection["box_" + allUsers[i].UserName] == "True")
+                {
+                    usersToAdd += allUsers[i].UserName + "\n";
+                }
+            }
+
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
                 sqlCon.Open();
-                string query = "INSERT INTO Projects VALUES(@Name, @Description)";
+                string query = "INSERT INTO Projects VALUES(@Name, @Description, @Member)";
                 SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
-                sqlCmd.Parameters.AddWithValue("@Name", projectModel.Name);
-                sqlCmd.Parameters.AddWithValue("@Description", projectModel.Description);
+                sqlCmd.Parameters.AddWithValue("@Name", name);
+                sqlCmd.Parameters.AddWithValue("@Description", description);
+                sqlCmd.Parameters.AddWithValue("@Member", usersToAdd);
+
                 sqlCmd.ExecuteNonQuery();
 
             }

@@ -203,6 +203,7 @@ namespace sdf_asp_net.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
+
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Nicht anzeigen, dass der Benutzer nicht vorhanden ist oder nicht bestätigt wurde.

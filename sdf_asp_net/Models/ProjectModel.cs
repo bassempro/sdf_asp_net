@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections;
 using System.ComponentModel;
 
 namespace sdf_asp_net.Models
@@ -12,6 +9,8 @@ namespace sdf_asp_net.Models
         public string Name { get; set; }
         [DisplayName("Beschreibung")]
         public string Description { get; set; }
+        [DisplayName("Nutzer")]
+        public string Member { get; set; }
 
     }
 }
