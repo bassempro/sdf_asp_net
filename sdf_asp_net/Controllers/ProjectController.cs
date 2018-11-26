@@ -7,6 +7,7 @@ using sdf_asp_net.Models;
 using Microsoft.AspNet.Identity.Owin;
 using System.Linq;
 using System.Collections;
+using sdf_asp_net.ViewModels;
 
 namespace sdf_asp_net.Controllers
 {
@@ -81,8 +82,13 @@ namespace sdf_asp_net.Controllers
                 projectModel.Name = dtblProject.Rows[0][1].ToString();
                 projectModel.Description = dtblProject.Rows[0][2].ToString();
                 projectModel.Member = dtblProject.Rows[0][3].ToString();
+                ProjectViewModel pvm = new ProjectViewModel();
+                pvm.Id = projectModel.Id;
+                pvm.Name = projectModel.Name;
+                pvm.Description = projectModel.Description;
+                pvm.ConvertStringMemberToArrayListMember(projectModel.Member);
 
-                return View(projectModel);
+                return View(pvm);
             }
             else
                 return RedirectToAction("Index");
@@ -99,9 +105,10 @@ namespace sdf_asp_net.Controllers
             {
                 if (collection["box_" + allUsers[i].UserName] == "True")
                 {
-                    usersToAdd += allUsers[i].UserName + "\n";
+                    usersToAdd += allUsers[i].UserName + ";";
                 }
             }
+            usersToAdd = usersToAdd.Substring(0, (usersToAdd.Length - 1));
 
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {

@@ -1,66 +1,81 @@
-﻿@model sdf_asp_net.Models.ProjectModel
+﻿@model sdf_asp_net.ViewModels.ProjectViewModel
 
 @{
     ViewBag.Title = "DetailView";
 }
 <div class="col-md-12">
-    <a href="@Url.Action("", "Project")" class="btn btn-primary float-right btn-lg active" role="button" aria-pressed="true">User einladen</a>
-    <a href="@Url.Action("", "Project")" class="btn btn-primary float-right btn-lg active" role="button" aria-pressed="true">Zum Chatroom</a>
+    <a href="@Url.Action("", "Project")"><button type="button"  class="btn btn-primary float-right btn-lg"> User einladen </button></a>
+    <a href="@Url.Action("", "Project")"><button type="button"  class="btn btn-success float-right btn-lg"> Zum Chatroom </button></a>
+    <button type="button" class="btn btn-danger float-right btn-lg" data-toggle="modal" data-target="#exampleModal"> Nutzerliste </button>
 </div>
-    <h2>Detailansicht</h2>
+<h2>Detailansicht</h2>
 
-    <div>
-        <h6><b>Dashboard zum Projekt:</b> @Html.DisplayFor(model => model.Name)</h6>
-        <h6><b>@Html.DisplayNameFor(model => model.Description):</b> @Html.DisplayFor(model => model.Description)</h6>
+<div>
+    <h6><b>Dashboard zum Projekt:</b> @Html.DisplayFor(model => model.Name)</h6>
+    <h6><b>@Html.DisplayNameFor(model => model.Description):</b> @Html.DisplayFor(model => model.Description)</h6>
 
-            <hr />
+    <hr />
 
-            <div class="container">
-                <div class="row">
-                    <div class="col-9">
-                    </div>
-                    <div class="col-4">
-                        <h2>Messageboard</h2>
-                        <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Message 1</h5>
-                                    <small>1 days ago</small>
-                                </div>
-                                <p class="mb-1">Cihan hat einen kleinen, uff was ist passiert?</small>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Message 2</h5>
-                                    <small>3 days ago</small>
-                                </div>
-                                <p class="mb-1">Kevin hat einen kleinen, uff was ist passiert?</small>
-                            </a>
-                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Message 3</h5>
-                                    <small>5 days ago</small>
-                                </div>
-                                <p class="mb-1">Pujan hat einen riesen yarro, uff was ist passiert?</small>
-                            </a>
+    <div class="container">
+        <div class="row">
+            <div class="col-9">
+                <h2>Messageboard</h2>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Message 1</h5>
+                            <small>1 days ago</small>
                         </div>
-                    </div>
-                    <div class="col-6">
-                        <h2>Userlist</h2>
-                        <ul class="list-group">
-                            <li class="list-group-item">Cihan das Kind</li>
-                            <li class="list-group-item">Kevin W aka Anabolspritze</li>
-                            <li class="list-group-item">Friedrich</li>
-                            <li class="list-group-item">Jonas</li>
-                            <li class="list-group-item">Kalle</li>
-                            <li>Nutzerliste: @Html.DisplayFor(model => model.Member)</li>
-                        </ul>
-                    </div>
+                        <small class="mb-1">Cihan hat einen kleinen, uff was ist passiert?</small>
+                    </a>
+                    <br />
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Message 2</h5>
+                            <small>3 days ago</small>
+                        </div>
+                        <small class="mb-1">Pujan hat Blasen auf den Knien vom blasen auf den Knien</small>
+                    </a>
+                    <br />
+                    <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Message 3</h5>
+                            <small>5 days ago</small>
+                        </div>
+                        <small class="mb-1">Pujan hat einen riesen yarro, uff was ist passiert?</small>
+                    </a>
                 </div>
             </div>
+        </div>
+    </div>
 
 </div>
-    <p>
-        @Html.ActionLink("Bearbeiten", "Edit", new { id = Model.Id }) |
-        @Html.ActionLink("Zurück zu der Projektliste", "Index")
-    </p>
+<p>
+    @Html.ActionLink("Bearbeiten", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Zurück zu der Projektliste", "Index")
+</p>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nutzerliste</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group">
+                    @foreach (var member in Model.Member)
+                    {
+                        <li class="list-group-item list-group-item-info">@member</li>
+                    }
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+            </div>
+        </div>
+    </div>
+</div>
