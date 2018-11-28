@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using System.Linq;
 using System.Collections;
 using sdf_asp_net.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace sdf_asp_net.Controllers
 {
@@ -38,6 +39,8 @@ namespace sdf_asp_net.Controllers
         [HttpGet]
         public ActionResult Index()
         {
+            var userName = User.Identity.GetUserName();
+            ViewBag.Username = userName;
             DataTable dtblProjects = new DataTable();
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
@@ -60,12 +63,13 @@ namespace sdf_asp_net.Controllers
                 user[i] = allUsers[i].UserName;
             }
 
-
             return View((object)user);
         }
 
         public ActionResult DetailView(int id)
         {
+            var userName = User.Identity.GetUserName();
+            userName.ToString();
             ProjectModel projectModel = new ProjectModel();
             DataTable dtblProject = new DataTable();
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
@@ -82,11 +86,17 @@ namespace sdf_asp_net.Controllers
                 projectModel.Name = dtblProject.Rows[0][1].ToString();
                 projectModel.Description = dtblProject.Rows[0][2].ToString();
                 projectModel.Member = dtblProject.Rows[0][3].ToString();
+                projectModel.ManagerId = dtblProject.Rows[0][4].ToString();
+                projectModel.ManagerName = dtblProject.Rows[0][5].ToString();
                 ProjectViewModel pvm = new ProjectViewModel();
                 pvm.Id = projectModel.Id;
                 pvm.Name = projectModel.Name;
                 pvm.Description = projectModel.Description;
                 pvm.ConvertStringMemberToArrayListMember(projectModel.Member);
+                pvm.ManagerId = projectModel.ManagerId;
+                pvm.ManagerName = projectModel.ManagerName;
+
+                ViewBag.IsAuthorized = userName;
 
                 return View(pvm);
             }
@@ -98,6 +108,8 @@ namespace sdf_asp_net.Controllers
         [HttpPost]
         public ActionResult Create(string name, string description, FormCollection collection)
         {
+            var userId = User.Identity.GetUserId();
+            var userName = User.Identity.GetUserName();
             string usersToAdd = "";
             var context = new ApplicationDbContext();
             var allUsers = context.Users.ToList();
@@ -113,11 +125,13 @@ namespace sdf_asp_net.Controllers
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
                 sqlCon.Open();
-                string query = "INSERT INTO Projects VALUES(@Name, @Description, @Member)";
+                string query = "INSERT INTO Projects VALUES(@Name, @Description, @Member, @ManagerId, @ManagerName)";
                 SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
                 sqlCmd.Parameters.AddWithValue("@Name", name);
                 sqlCmd.Parameters.AddWithValue("@Description", description);
                 sqlCmd.Parameters.AddWithValue("@Member", usersToAdd);
+                sqlCmd.Parameters.AddWithValue("@ManagerId", userId);
+                sqlCmd.Parameters.AddWithValue("@ManagerName", userName);
 
                 sqlCmd.ExecuteNonQuery();
 

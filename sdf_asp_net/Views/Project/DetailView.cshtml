@@ -4,15 +4,16 @@
     ViewBag.Title = "DetailView";
 }
 <div class="col-md-12">
-    <a href="@Url.Action("", "Project")"><button type="button"  class="btn btn-primary float-right btn-lg"> User einladen </button></a>
-    <a href="@Url.Action("", "Project")"><button type="button"  class="btn btn-success float-right btn-lg"> Zum Chatroom </button></a>
-    <button type="button" class="btn btn-danger float-right btn-lg" data-toggle="modal" data-target="#exampleModal"> Nutzerliste </button>
+    <a href="@Url.Action("", "Project")"><button type="button" class="btn btn-success float-right btn-lg"> Zum Chatroom </button></a>
+    <button type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#exampleModal"> Nutzerliste </button>
 </div>
 <h2>Detailansicht</h2>
 
 <div>
     <h6><b>Dashboard zum Projekt:</b> @Html.DisplayFor(model => model.Name)</h6>
     <h6><b>@Html.DisplayNameFor(model => model.Description):</b> @Html.DisplayFor(model => model.Description)</h6>
+    <h6><b>Projektleiter:</b> @Html.DisplayFor(model => model.ManagerName)</h6>
+    @{string userName = Model.ManagerName;}
 
     <hr />
 
@@ -34,7 +35,7 @@
                             <h5 class="mb-1">Message 2</h5>
                             <small>3 days ago</small>
                         </div>
-                        <small class="mb-1">Pujan hat Blasen auf den Knien vom blasen auf den Knien</small>
+                        <small class="mb-1">Kevin W hat Blasen auf den Knien vom blasen auf den Knien</small>
                     </a>
                     <br />
                     <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
@@ -51,8 +52,14 @@
 
 </div>
 <p>
-    @Html.ActionLink("Bearbeiten", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Zurück zu der Projektliste", "Index")
+    @if (@ViewBag.IsAuthorized != null && userName != null)
+    {
+        if (userName.ToString().Contains(@ViewBag.IsAuthorized))
+        {
+            @Html.ActionLink("Bearbeiten", "Edit", new { id = Model.Id })
+        }
+    }
+   |  @Html.ActionLink("Zurück zu der Projektliste", "Index")
 </p>
 
 

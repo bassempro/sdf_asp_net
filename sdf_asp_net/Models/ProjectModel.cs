@@ -11,6 +11,9 @@ namespace sdf_asp_net.Models
         public string Description { get; set; }
         [DisplayName("Nutzer")]
         public string Member { get; set; }
+        [DisplayName("ProjektleiterID")]
+        public string ManagerId { get; set; }
+        public string ManagerName { get; set; }
 
     }
 }

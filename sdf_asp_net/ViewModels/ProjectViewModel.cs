@@ -13,6 +13,9 @@ namespace sdf_asp_net.ViewModels
         public string Name { get; set; }
         public string Description { get; set; }
         public ArrayList Member { get; set; }
+        public string ManagerId { get; set; }
+        public string ManagerName { get; set; }
+
 
         public ProjectViewModel()
         {
