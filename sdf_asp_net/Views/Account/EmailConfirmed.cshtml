@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "EmailConfirmed";
+
+    ViewBag.Title = "Konto Verifizierung ";
+
+}
+
+<div class="row">
+    <div class="col-md-8">
+
+        @using (Html.BeginForm("ConfirmEmail", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="col-md-8">
+                <p> Welcome  @ViewBag.Email Ihre Konto wurde mit erfolg bestätigt .Um Sie sich einzuloggen Klicken Sie hier darauf  </p>
+
+                <p>
+                    @Html.ActionLink("Login", "Login")
+                </p>
+            </div>
+        }
+    </div>
+
+</div>
+
