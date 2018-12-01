@@ -12,10 +12,17 @@ using Microsoft.AspNet.Identity;
 
 namespace sdf_asp_net.Controllers
 {
+
     [Authorize]
 
     public class ProjectController : Controller
     {
+
+        public ActionResult Chat()
+        {
+            return View();
+        }
+
         string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=aspnet-sdf_asp_net-20181114091107;Integrated Security=True";
         private ApplicationUserManager _userManager;
 

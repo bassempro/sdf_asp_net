@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Meine ASP.NET-Anwendung</title>
+
+    <script type="text/javascript" src='~/Scripts/jquery-3.3.1.js'></script>
+    <script type="text/javascript" src='~/Scripts/bootstrap.min.js'></script>
+    @Styles.Render("~/Content/CSS/StyleSheet.css")
+
+ 
+
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">.Project</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Project")">Startseite</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("About", "Home")">Info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Contact", "Home")">Kontakt</a>
+                </li>
+                @Html.Partial("_LoginPartial")
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="row">
+        <div class="leftcolumn">
+            <div class="card">
+                @RenderBody()
+                
+            </div>
+        </div>
+        <div class="rightcolumn">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Nutzerliste</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var member in Model.Member)
+                    {
+                        <li class="list-group-item">@member</li>
+                    }
+       
+                </ul>
+            </div>
+            
+            
+        </div>
+    </div>
+
+    <div class="footer">
+        <h2>Footer</h2>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
