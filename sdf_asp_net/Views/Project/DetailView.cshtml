@@ -5,16 +5,16 @@
     ViewBag.Title = "DetailView";
 }
 <div class="col-md-12">
-    <!-- <a href="@Url.Action("", "Project/Chat")"><button type="button" class="btn btn-success float-right btn-lg"> Zum Chatroom </button></a>
-      <button type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#exampleModal"> Nutzerliste </button> -->
 </div>
-    <h2>Detailansicht</h2>
-
     <div>
-        <h6><b>Dashboard zum Projekt:</b> @Html.DisplayFor(model => model.Name)</h6>
-        <h6><b>@Html.DisplayNameFor(model => model.Description):</b> @Html.DisplayFor(model => model.Description)</h6>
-        <h6><b>Projektleiter:</b> @Html.DisplayFor(model => model.ManagerName)</h6>
-        <h6><b>Chat-Nick:</b> @Html.DisplayFor(model => model.ManagerName)</h6>
+
+        <div class="jumbotron">
+            <h1 class="display-4">Projekt: @Html.DisplayFor(model => model.Name)</h1>
+            <p class="lead">Beschreibung: @Html.DisplayFor(model => model.Description)</p>
+            <hr class="my-4">
+            <p>Projektleiter: @Html.DisplayFor(model => model.ManagerName) </p>
+        </div>
+
 
         @{string userName = Model.ManagerName;}
 
@@ -25,126 +25,54 @@
                 <div class="col-9">
                     <h2>Messageboard</h2>
                     <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Message 1</h5>
-                                <small>1 days ago</small>
-                            </div>
-                            <small class="mb-1">Cihan hat einen kleinen, uff was ist passiert?</small>
-                        </a>
-                        <br />
-                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Message 2</h5>
-                                <small>3 days ago</small>
-                            </div>
-                            <small class="mb-1">Kevin W hat Blasen auf den Knien vom blasen auf den Knien</small>
-                        </a>
-                        <br />
-                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">Message 3</h5>
-                                <small>5 days ago</small>
-                            </div>
-                            <small class="mb-1">Pujan hat einen riesen yarro, uff was ist passiert?</small>
-                        </a>
+
+                        @for (int i = 0; i < Model.Messages.Count; i++)
+                        {
+                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">@Model.Messages[i].Message</h5>
+                                    <small>@Model.Messages[i].Date</small>
+                                </div>
+                                <small class="mb-1">@Model.Messages[i].Author</small>
+                            </a>
+                            <br />
+                        }
                     </div>
                 </div>
             </div>
         </div>
 
+        <br />
+        @using (Html.BeginForm("Message", "Project"))
+        {
+            @Html.AntiForgeryToken()
+        <div class="input-group">
+            <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Nachricht" aria-label="Message" aria-describedby="button-addon4">
+            <input type="hidden" name="projectId" class="form-control" value="@Html.DisplayFor(model => model.Id)" aria-label="Message" aria-describedby="button-addon4">
+            <div class="input-group-append" id="button-addon4">
+                <input type="button" value="More" class="btn btn-primary" />
+                <input type="submit" value=">" class="btn btn-primary" />
+            </div>
+        </div>
+        }
+
+
+        <br />
+
     </div>
+
+
     <p>
+        <a href="@Url.Action("Index", "Project")" class="btn btn-success float-right btn-lg" role="button" aria-pressed="true">Zurück zu der Projektliste</a>
         @if (@ViewBag.IsAuthorized != null && userName != null)
         {
             if (userName.ToString().Contains(@ViewBag.IsAuthorized))
             {
-                @Html.ActionLink("Bearbeiten", "Edit", new { id = Model.Id })
+                <a href="@Url.Action("Edit", "Project", new { id = Model.Id })" class="btn btn-primary float-right btn-lg" role="button" aria-pressed="true">Bearbeiten</a>
             }
         }
-        |  @Html.ActionLink("Zurück zu der Projektliste", "Index")
     </p>
 
 
     <hr>
-    <div class="container">
-        <h2>Chat</h2>
 
-        <input type="text" id="message" />
-        <input type="button" id="sendmessage" value="Send" />
-        <input type="hidden" id="displayname" />
-        <ul id="discussion"></ul>
-
-       
-
-    </div>
-
-
-    <!--  Doppelt gepoppelt
-
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Nutzerliste</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <ul class="list-group">
-                            @foreach (var member in Model.Member)
-                            {
-                                <li class="list-group-item list-group-item-info">@member</li>
-                            }
-                        </ul>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        -->
-
-    @section scripts {
-        <!--Script references. -->
-        <!--The jQuery library is required and is referenced by default in _Layout.cshtml. -->
-        <!--Reference the SignalR library. -->
-        <script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
-        <!--Reference the autogenerated SignalR hub script. -->
-        <script src="~/signalr/hubs"></script>
-        <!--SignalR script to update the chat page and send messages.-->
-        <script>
-        $(function () {
-            // Reference the auto-generated proxy for the hub.
-            var chat = $.connection.chatHub;
-            // Create a function that the hub can call back to display messages.
-            chat.client.addNewMessageToPage = function (name, message) {
-                // Add the message to the page.
-                $('#discussion').append('<li><strong>' + htmlEncode('[@DateTime.Now] - [@Html.DisplayFor(model => model.ManagerName)]')
-                    + '</strong>: ' + htmlEncode(message) + '</li>');
-            };
-
-            // Get the user name and store it to prepend to messages.
-            //$('#hello').val(prompt('Enter your name:', ''));
-            // Set initial focus to message input box.
-            // $('#message').focus();
-
-            // Start the connection.
-            $.connection.hub.start().done(function () {
-                $('#sendmessage').click(function () {
-                    // Call the Send method on the hub.
-                    chat.server.send($('#displayname').val(), $('#message').val());
-                    // Clear text box and reset focus for next comment.
-                    $('#message').val('').focus();
-                });
-            });
-        });
-        // This optional function html-encodes messages for display in the page.
-        function htmlEncode(value) {
-            var encodedValue = $('<div />').text(value).html();
-            return encodedValue;
-        }
-        </script>
-    }

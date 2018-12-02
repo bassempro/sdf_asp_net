@@ -77,8 +77,8 @@ namespace sdf_asp_net.Controllers
         {
             var userName = User.Identity.GetUserName();
             userName.ToString();
-            ProjectModel projectModel = new ProjectModel();
             DataTable dtblProject = new DataTable();
+            DataTable dtblMessageboard = new DataTable();
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
                 sqlCon.Open();
@@ -86,22 +86,32 @@ namespace sdf_asp_net.Controllers
                 SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
                 sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
                 sqlDa.Fill(dtblProject);
+
+                query = "SELECT * FROM Messageboards WHERE ProjectId = @Id";
+                sqlDa = new SqlDataAdapter(query, sqlCon);
+                sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
+                sqlDa.Fill(dtblMessageboard);
             }
             if (dtblProject.Rows.Count == 1)
             {
-                projectModel.Id = Convert.ToInt32(dtblProject.Rows[0][0].ToString());
-                projectModel.Name = dtblProject.Rows[0][1].ToString();
-                projectModel.Description = dtblProject.Rows[0][2].ToString();
-                projectModel.Member = dtblProject.Rows[0][3].ToString();
-                projectModel.ManagerId = dtblProject.Rows[0][4].ToString();
-                projectModel.ManagerName = dtblProject.Rows[0][5].ToString();
                 ProjectViewModel pvm = new ProjectViewModel();
-                pvm.Id = projectModel.Id;
-                pvm.Name = projectModel.Name;
-                pvm.Description = projectModel.Description;
-                pvm.ConvertStringMemberToArrayListMember(projectModel.Member);
-                pvm.ManagerId = projectModel.ManagerId;
-                pvm.ManagerName = projectModel.ManagerName;
+                pvm.Id = Convert.ToInt32(dtblProject.Rows[0][0].ToString());
+                pvm.Name = dtblProject.Rows[0][1].ToString();
+                pvm.Description = dtblProject.Rows[0][2].ToString();
+                pvm.ConvertStringMemberToArrayListMember(dtblProject.Rows[0][3].ToString());
+                pvm.ManagerId = dtblProject.Rows[0][4].ToString();
+                pvm.ManagerName = dtblProject.Rows[0][5].ToString();
+
+
+                for (int i = 0; i < dtblMessageboard.Rows.Count; i++)
+                {
+                    MessageViewModel mvm = new MessageViewModel();
+                    mvm.Id = Convert.ToInt32(dtblMessageboard.Rows[i][0].ToString());
+                    mvm.Message = dtblMessageboard.Rows[i][1].ToString();
+                    mvm.Author = dtblMessageboard.Rows[i][3].ToString();
+                    mvm.Date = dtblMessageboard.Rows[i][4].ToString();
+                    pvm.Messages.Add(mvm);
+                }
 
                 ViewBag.IsAuthorized = userName;
 
@@ -198,8 +208,36 @@ namespace sdf_asp_net.Controllers
                 SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
                 sqlCmd.Parameters.AddWithValue("@Id", id);
                 sqlCmd.ExecuteNonQuery();
+                query = "DELETE FROM Messageboards WHERE ProjectId = @Id";
+                sqlCmd = new SqlCommand(query, sqlCon);
+                sqlCmd.Parameters.AddWithValue("@Id", id);
+                sqlCmd.ExecuteNonQuery();
             }
             return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public ActionResult Message(string message, string projectId)
+        {
+            int projectIdConverted = int.Parse(projectId);
+            DateTime timeStamp = System.DateTime.Now;
+            if (message != null && message.Length > 5)
+            {
+                using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                {
+                    sqlCon.Open();
+                    string query = "INSERT INTO Messageboards VALUES(@Message, @ProjectId, @Author, @Time)";
+                    SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                    sqlCmd.Parameters.AddWithValue("@Message", message);
+                    sqlCmd.Parameters.AddWithValue("@ProjectId", projectIdConverted);
+                    sqlCmd.Parameters.AddWithValue("@Author", User.Identity.GetUserName());
+                    sqlCmd.Parameters.AddWithValue("@Time", timeStamp);
+
+                    sqlCmd.ExecuteNonQuery();
+                }
+            }
+            return RedirectToAction("DetailView/" + projectId);
+        }
+
     }
 }

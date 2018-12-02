@@ -12,14 +12,17 @@ namespace sdf_asp_net.ViewModels
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public ArrayList Member { get; set; }
+        public List<string> Member { get; set; }
         public string ManagerId { get; set; }
         public string ManagerName { get; set; }
+        public List<MessageViewModel> Messages { get; set; }
+
 
 
         public ProjectViewModel()
         {
-            Member = new ArrayList();
+            Member = new List<string>();
+            Messages = new List<MessageViewModel>();
         }
 
         public void ConvertStringMemberToArrayListMember(string member)
@@ -30,5 +33,6 @@ namespace sdf_asp_net.ViewModels
                 this.Member.Add(splitedMembers[i]);
             }
         }
+
     }
 }
