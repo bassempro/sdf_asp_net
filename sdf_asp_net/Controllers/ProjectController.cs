@@ -224,7 +224,7 @@ namespace sdf_asp_net.Controllers
             int projectIdConverted = int.Parse(projectId);
             DateTime timeStamp = System.DateTime.Now;
 
-            if (postedFile != null)
+            if (postedFile != null && message != null && message.Length > 5)
             {
                 byte[] bytes;
                 using (BinaryReader br = new BinaryReader(postedFile.InputStream))
@@ -273,6 +273,31 @@ namespace sdf_asp_net.Controllers
                 }
             }
             return RedirectToAction("DetailView/" + projectId);
+        }
+        [HttpPost]
+        public FileResult DownloadFile(int? fileId)
+        {
+            byte[] bytes;
+            string fileName, contentType;
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand())
+                {
+                    cmd.CommandText = "SELECT FileName, FileData, FileContentType FROM Messageboards WHERE Id=@Id";
+                    cmd.Parameters.AddWithValue("@Id", fileId);
+                    cmd.Connection = con;
+                    con.Open();
+                    using (SqlDataReader sdr = cmd.ExecuteReader())
+                    {
+                        sdr.Read();
+                        bytes = (byte[])sdr["FileData"];
+                        contentType = sdr["FileContentType"].ToString();
+                        fileName = sdr["FileName"].ToString();
+                    }
+                    con.Close();
+                }
+            }
+            return File(bytes, contentType, fileName);
         }
     }
 }

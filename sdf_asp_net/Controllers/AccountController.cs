@@ -74,9 +74,6 @@ namespace sdf_asp_net.Controllers
 
                 if (user != null)
                 {
-                    await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-                    return RedirectToAction("Index", "Project");
-                    /*
                     if (user.EmailConfirmed == true)
                     {
                         await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
@@ -90,9 +87,7 @@ namespace sdf_asp_net.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Invalid username or password.");
-                }
-                */
-                }
+                }              
             }
                 // If we got this far, something failed, redisplay form
                 return View(model);

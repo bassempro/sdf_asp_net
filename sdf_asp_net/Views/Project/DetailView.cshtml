@@ -15,11 +15,14 @@
         <p>Projektleiter: @Html.DisplayFor(model => model.ManagerName) </p>
     </div>
 
-
     @{string userName = Model.ManagerName;}
 
     <hr />
-
+    @using (Html.BeginForm("DownloadFile", "Project", FormMethod.Post))
+    {
+        <input type="hidden" id="hfFileId" name="FileId" />
+        <input type="submit" id="btnDownload" value="Download" style="display:none" />
+    }
     <div class="container">
         <div class="row">
             <div class="col-9">
@@ -39,6 +42,13 @@
                                 <small class="mb-1">@Model.Messages[i].FileContentType</small>
                             </div>
                         </a>
+                        if (@ViewBag.IsAuthorized != null && userName != null)
+                        {
+                            if (userName.ToString().Contains(@ViewBag.IsAuthorized) && @Model.Messages[i].FileName.ToString().Length > 0)
+                            {
+                                <a href="javascript:;" onclick="DownloadFile(@Model.Messages[i].Id)">Download</a>
+                            }
+                        }
                         <br />
                     }
                 </div>
@@ -49,20 +59,23 @@
     <br />
     @using (Html.BeginForm("Message", "Project", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-    <div class="input-group">
-        <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Nachricht" aria-label="Message" aria-describedby="button-addon4">
-        <input type="hidden" name="projectId" class="form-control" value="@Html.DisplayFor(model => model.Id)" aria-label="Message" aria-describedby="button-addon4">
-        <div class="input-group-append" id="button-addon4">
-            <input type="file" name="postedFile" class="btn btn-primary" />
-            <input type="submit" id="btnUpload" value=">" class="btn btn-primary" />
-        </div>
-
-    </div>
+        if (@ViewBag.IsAuthorized != null && userName != null)
+        {
+            if (userName.ToString().Contains(@ViewBag.IsAuthorized))
+            {
+                <div class="input-group">
+                    <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Nachricht" aria-label="Message" aria-describedby="button-addon4">
+                    <input type="hidden" name="projectId" class="form-control" value="@Html.DisplayFor(model => model.Id)" aria-label="Message" aria-describedby="button-addon4">
+                    <div class="input-group-append" id="button-addon4">
+                        <input type="file" name="postedFile" class="btn btn-primary" />
+                        <input type="submit" id="btnUpload" value=">" class="btn btn-primary" />
+                    </div>
+                </div>
+            }
+        }
     }
 </div>
-
 <br />
-
 
 <p>
     <a href="@Url.Action("Index", "Project")" class="btn btn-success float-right btn-lg" role="button" aria-pressed="true">Zurück zu der Projektliste</a>
@@ -75,5 +88,11 @@
     }
 </p>
 
-
 <hr>
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+    function DownloadFile(fileId) {
+        $("#hfFileId").val(fileId);
+        $("#btnDownload")[0].click();
+    };
+</script>
