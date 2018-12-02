@@ -11,5 +11,8 @@ namespace sdf_asp_net.ViewModels
         public string Message { get; set; }
         public string Author { get; set; }
         public string Date { get; set; }
+        public string FileName { get; set; }
+        public string FileContentType { get; set; }
+        public byte[] FileData { get; set; }
     }
 }

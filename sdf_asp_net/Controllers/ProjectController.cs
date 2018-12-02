@@ -6,9 +6,9 @@ using System.Data.SqlClient;
 using sdf_asp_net.Models;
 using Microsoft.AspNet.Identity.Owin;
 using System.Linq;
-using System.Collections;
 using sdf_asp_net.ViewModels;
 using Microsoft.AspNet.Identity;
+using System.IO;
 
 namespace sdf_asp_net.Controllers
 {
@@ -90,7 +90,7 @@ namespace sdf_asp_net.Controllers
                 query = "SELECT * FROM Messageboards WHERE ProjectId = @Id";
                 sqlDa = new SqlDataAdapter(query, sqlCon);
                 sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
-                sqlDa.Fill(dtblMessageboard);
+                  sqlDa.Fill(dtblMessageboard);
             }
             if (dtblProject.Rows.Count == 1)
             {
@@ -110,6 +110,8 @@ namespace sdf_asp_net.Controllers
                     mvm.Message = dtblMessageboard.Rows[i][1].ToString();
                     mvm.Author = dtblMessageboard.Rows[i][3].ToString();
                     mvm.Date = dtblMessageboard.Rows[i][4].ToString();
+                    mvm.FileName = dtblMessageboard.Rows[i][5].ToString();
+                    mvm.FileContentType = dtblMessageboard.Rows[i][6].ToString();
                     pvm.Messages.Add(mvm);
                 }
 
@@ -217,27 +219,60 @@ namespace sdf_asp_net.Controllers
         }
 
         [HttpPost]
-        public ActionResult Message(string message, string projectId)
+        public ActionResult Message(string message, string projectId, HttpPostedFileBase postedFile)
         {
             int projectIdConverted = int.Parse(projectId);
             DateTime timeStamp = System.DateTime.Now;
-            if (message != null && message.Length > 5)
-            {
-                using (SqlConnection sqlCon = new SqlConnection(connectionString))
-                {
-                    sqlCon.Open();
-                    string query = "INSERT INTO Messageboards VALUES(@Message, @ProjectId, @Author, @Time)";
-                    SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
-                    sqlCmd.Parameters.AddWithValue("@Message", message);
-                    sqlCmd.Parameters.AddWithValue("@ProjectId", projectIdConverted);
-                    sqlCmd.Parameters.AddWithValue("@Author", User.Identity.GetUserName());
-                    sqlCmd.Parameters.AddWithValue("@Time", timeStamp);
 
-                    sqlCmd.ExecuteNonQuery();
+            if (postedFile != null)
+            {
+                byte[] bytes;
+                using (BinaryReader br = new BinaryReader(postedFile.InputStream))
+                {
+                    bytes = br.ReadBytes(postedFile.ContentLength);
+                }
+                if (message != null && message.Length > 5)
+                {
+                    using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                    {
+                        sqlCon.Open();
+                        string query = "INSERT INTO Messageboards VALUES(@Message, @ProjectId, @Author, @Time, @FileName, @FileContentType, @FileData)";
+                        SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                        sqlCmd.Parameters.AddWithValue("@Message", message);
+                        sqlCmd.Parameters.AddWithValue("@ProjectId", projectIdConverted);
+                        sqlCmd.Parameters.AddWithValue("@Author", User.Identity.GetUserName());
+                        sqlCmd.Parameters.AddWithValue("@Time", timeStamp);
+                        sqlCmd.Parameters.AddWithValue("@FileName", Path.GetFileName(postedFile.FileName));
+                        sqlCmd.Parameters.AddWithValue("@FileContentType", postedFile.ContentType);
+                        sqlCmd.Parameters.AddWithValue("@FileData", bytes);
+
+                        sqlCmd.ExecuteNonQuery();
+                    }
+                }
+
+            }
+            else
+            {
+                if (message != null && message.Length > 5)
+                {
+                    using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                    {
+                        sqlCon.Open();
+                        string query = "INSERT INTO Messageboards VALUES(@Message, @ProjectId, @Author, @Time, NULL, NULL, NULL)";
+                        SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                        sqlCmd.Parameters.AddWithValue("@Message", message);
+                        sqlCmd.Parameters.AddWithValue("@ProjectId", projectIdConverted);
+                        sqlCmd.Parameters.AddWithValue("@Author", User.Identity.GetUserName());
+                        sqlCmd.Parameters.AddWithValue("@Time", timeStamp);
+                        sqlCmd.Parameters.AddWithValue("@FileName", DBNull.Value);
+                        sqlCmd.Parameters.AddWithValue("@FileContentType", DBNull.Value);
+                        sqlCmd.Parameters.AddWithValue("@FileData", DBNull.Value);
+
+                        sqlCmd.ExecuteNonQuery();
+                    }
                 }
             }
             return RedirectToAction("DetailView/" + projectId);
         }
-
     }
 }

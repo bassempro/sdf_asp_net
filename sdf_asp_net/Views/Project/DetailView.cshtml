@@ -6,73 +6,74 @@
 }
 <div class="col-md-12">
 </div>
-    <div>
+<div>
 
-        <div class="jumbotron">
-            <h1 class="display-4">Projekt: @Html.DisplayFor(model => model.Name)</h1>
-            <p class="lead">Beschreibung: @Html.DisplayFor(model => model.Description)</p>
-            <hr class="my-4">
-            <p>Projektleiter: @Html.DisplayFor(model => model.ManagerName) </p>
-        </div>
-
-
-        @{string userName = Model.ManagerName;}
-
-        <hr />
-
-        <div class="container">
-            <div class="row">
-                <div class="col-9">
-                    <h2>Messageboard</h2>
-                    <div class="list-group">
-
-                        @for (int i = 0; i < Model.Messages.Count; i++)
-                        {
-                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">@Model.Messages[i].Message</h5>
-                                    <small>@Model.Messages[i].Date</small>
-                                </div>
-                                <small class="mb-1">@Model.Messages[i].Author</small>
-                            </a>
-                            <br />
-                        }
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <br />
-        @using (Html.BeginForm("Message", "Project"))
-        {
-            @Html.AntiForgeryToken()
-        <div class="input-group">
-            <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Nachricht" aria-label="Message" aria-describedby="button-addon4">
-            <input type="hidden" name="projectId" class="form-control" value="@Html.DisplayFor(model => model.Id)" aria-label="Message" aria-describedby="button-addon4">
-            <div class="input-group-append" id="button-addon4">
-                <input type="button" value="More" class="btn btn-primary" />
-                <input type="submit" value=">" class="btn btn-primary" />
-            </div>
-        </div>
-        }
-
-
-        <br />
-
+    <div class="jumbotron">
+        <h1 class="display-4">Projekt: @Html.DisplayFor(model => model.Name)</h1>
+        <p class="lead">Beschreibung: @Html.DisplayFor(model => model.Description)</p>
+        <hr class="my-4">
+        <p>Projektleiter: @Html.DisplayFor(model => model.ManagerName) </p>
     </div>
 
 
-    <p>
-        <a href="@Url.Action("Index", "Project")" class="btn btn-success float-right btn-lg" role="button" aria-pressed="true">Zurück zu der Projektliste</a>
-        @if (@ViewBag.IsAuthorized != null && userName != null)
+    @{string userName = Model.ManagerName;}
+
+    <hr />
+
+    <div class="container">
+        <div class="row">
+            <div class="col-9">
+                <h2>Messageboard</h2>
+                <div class="list-group" style="height: 500px; overflow-y: scroll;">
+
+                    @for (int i = 0; i < Model.Messages.Count; i++)
+                    {
+                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h2 class="mb-1">@Model.Messages[i].Message</h2>
+                                <small>veröffentlicht am: @Model.Messages[i].Date</small>
+                            </div>
+                            <small class="mb-1">von: @Model.Messages[i].Author</small>
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">@Model.Messages[i].FileName</h6>
+                                <small class="mb-1">@Model.Messages[i].FileContentType</small>
+                            </div>
+                        </a>
+                        <br />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    @using (Html.BeginForm("Message", "Project", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+    <div class="input-group">
+        <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Nachricht" aria-label="Message" aria-describedby="button-addon4">
+        <input type="hidden" name="projectId" class="form-control" value="@Html.DisplayFor(model => model.Id)" aria-label="Message" aria-describedby="button-addon4">
+        <div class="input-group-append" id="button-addon4">
+            <input type="file" name="postedFile" class="btn btn-primary" />
+            <input type="submit" id="btnUpload" value=">" class="btn btn-primary" />
+        </div>
+
+    </div>
+    }
+</div>
+
+<br />
+
+
+<p>
+    <a href="@Url.Action("Index", "Project")" class="btn btn-success float-right btn-lg" role="button" aria-pressed="true">Zurück zu der Projektliste</a>
+    @if (@ViewBag.IsAuthorized != null && userName != null)
+    {
+        if (userName.ToString().Contains(@ViewBag.IsAuthorized))
         {
-            if (userName.ToString().Contains(@ViewBag.IsAuthorized))
-            {
-                <a href="@Url.Action("Edit", "Project", new { id = Model.Id })" class="btn btn-primary float-right btn-lg" role="button" aria-pressed="true">Bearbeiten</a>
-            }
+            <a href="@Url.Action("Edit", "Project", new { id = Model.Id })" class="btn btn-primary float-right btn-lg" role="button" aria-pressed="true">Bearbeiten</a>
         }
-    </p>
+    }
+</p>
 
 
-    <hr>
-
+<hr>
