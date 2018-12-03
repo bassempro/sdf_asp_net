@@ -9,6 +9,7 @@ using System.Linq;
 using sdf_asp_net.ViewModels;
 using Microsoft.AspNet.Identity;
 using System.IO;
+using System.Collections.Generic;
 
 namespace sdf_asp_net.Controllers
 {
@@ -79,6 +80,7 @@ namespace sdf_asp_net.Controllers
             userName.ToString();
             DataTable dtblProject = new DataTable();
             DataTable dtblMessageboard = new DataTable();
+            DataTable dtblProjectUser = new DataTable();
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
                 sqlCon.Open();
@@ -90,7 +92,12 @@ namespace sdf_asp_net.Controllers
                 query = "SELECT * FROM Messageboards WHERE ProjectId = @Id";
                 sqlDa = new SqlDataAdapter(query, sqlCon);
                 sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
-                  sqlDa.Fill(dtblMessageboard);
+                sqlDa.Fill(dtblMessageboard);
+
+                query = "SELECT * FROM ProjectUser WHERE ProjectId = @Id";
+                sqlDa = new SqlDataAdapter(query, sqlCon);
+                sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
+                sqlDa.Fill(dtblProjectUser);
             }
             if (dtblProject.Rows.Count == 1)
             {
@@ -98,9 +105,13 @@ namespace sdf_asp_net.Controllers
                 pvm.Id = Convert.ToInt32(dtblProject.Rows[0][0].ToString());
                 pvm.Name = dtblProject.Rows[0][1].ToString();
                 pvm.Description = dtblProject.Rows[0][2].ToString();
-                pvm.ConvertStringMemberToArrayListMember(dtblProject.Rows[0][3].ToString());
-                pvm.ManagerId = dtblProject.Rows[0][4].ToString();
-                pvm.ManagerName = dtblProject.Rows[0][5].ToString();
+                pvm.ManagerId = dtblProject.Rows[0][3].ToString();
+                pvm.ManagerName = dtblProject.Rows[0][4].ToString();
+
+                for (int i = 0; i < dtblProjectUser.Rows.Count; i++)
+                {
+                    pvm.Member.Add(dtblProjectUser.Rows[i][1].ToString());
+                }
 
 
                 for (int i = 0; i < dtblMessageboard.Rows.Count; i++)
@@ -129,30 +140,46 @@ namespace sdf_asp_net.Controllers
         {
             var userId = User.Identity.GetUserId();
             var userName = User.Identity.GetUserName();
-            string usersToAdd = "";
+            List<string> usersToAdd = new List<string>();
             var context = new ApplicationDbContext();
             var allUsers = context.Users.ToList();
             for (int i = 0; i < allUsers.Count; i++)
             {
                 if (collection["box_" + allUsers[i].UserName] == "True")
                 {
-                    usersToAdd += allUsers[i].UserName + ";";
+                    usersToAdd.Add(allUsers[i].UserName);
                 }
             }
-            usersToAdd = usersToAdd.Substring(0, (usersToAdd.Length - 1));
 
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
                 sqlCon.Open();
-                string query = "INSERT INTO Projects VALUES(@Name, @Description, @Member, @ManagerId, @ManagerName)";
+                string query = "INSERT INTO Projects VALUES(@Name, @Description, @ManagerId, @ManagerName)";
                 SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
                 sqlCmd.Parameters.AddWithValue("@Name", name);
                 sqlCmd.Parameters.AddWithValue("@Description", description);
-                sqlCmd.Parameters.AddWithValue("@Member", usersToAdd);
                 sqlCmd.Parameters.AddWithValue("@ManagerId", userId);
                 sqlCmd.Parameters.AddWithValue("@ManagerName", userName);
-
                 sqlCmd.ExecuteNonQuery();
+
+                DataTable dtblProject = new DataTable();
+                query = "SELECT * FROM Projects WHERE Name = @Name";
+                SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+                sqlDa.SelectCommand.Parameters.AddWithValue("@Name", name);
+                sqlDa.Fill(dtblProject);
+
+                if (dtblProject.Rows.Count == 1)
+                {
+                    int createdProjectId = Convert.ToInt32(dtblProject.Rows[0][0].ToString());
+                    for (int i = 0; i < usersToAdd.Count; i++)
+                    {
+                        query = "INSERT INTO ProjectUser VALUES(@Name, @ProjectId)";
+                        sqlCmd = new SqlCommand(query, sqlCon);
+                        sqlCmd.Parameters.AddWithValue("@Name", usersToAdd[i]);
+                        sqlCmd.Parameters.AddWithValue("@ProjectId", createdProjectId);
+                        sqlCmd.ExecuteNonQuery();
+                    }
+                }
 
             }
             return RedirectToAction("Index");
@@ -161,8 +188,9 @@ namespace sdf_asp_net.Controllers
         // GET: Project/Edit/5
         public ActionResult Edit(int id)
         {
-            ProjectModel projectModel = new ProjectModel();
+            ProjectViewModel projectModel = new ProjectViewModel();
             DataTable dtblProject = new DataTable();
+            DataTable dtblProjectUser = new DataTable();
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
                 sqlCon.Open();
@@ -170,12 +198,25 @@ namespace sdf_asp_net.Controllers
                 SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
                 sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
                 sqlDa.Fill(dtblProject);
+
+                query = "SELECT * FROM ProjectUser WHERE ProjectId = @Id";
+                sqlDa = new SqlDataAdapter(query, sqlCon);
+                sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
+                sqlDa.Fill(dtblProjectUser);
             }
             if (dtblProject.Rows.Count == 1)
             {
                 projectModel.Id = Convert.ToInt32(dtblProject.Rows[0][0].ToString());
                 projectModel.Name = dtblProject.Rows[0][1].ToString();
                 projectModel.Description = dtblProject.Rows[0][2].ToString();
+                var context = new ApplicationDbContext();
+                var allUsers = context.Users.ToList();
+                string[] user = new string[allUsers.Count];
+                for (int i = 0; i < allUsers.Count; i++)
+                {
+                    projectModel.Member.Add(allUsers[i].UserName);
+                }
+
 
                 return View(projectModel);
             }
@@ -185,17 +226,44 @@ namespace sdf_asp_net.Controllers
 
         // POST: Project/Edit/5
         [HttpPost]
-        public ActionResult Edit(ProjectModel projectModel)
+        public ActionResult Edit(ProjectViewModel projectViewModel, FormCollection collection)
         {
+            List<string> usersToAdd = new List<string>();
+            var context = new ApplicationDbContext();
+            var allUsers = context.Users.ToList();
+            for (int i = 0; i < allUsers.Count; i++)
+            {
+                if (collection["box_" + allUsers[i].UserName] == "True")
+                {
+                    usersToAdd.Add(allUsers[i].UserName);
+                }
+            }
+
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
                 sqlCon.Open();
                 string query = "UPDATE Projects SET Name = @Name, Description = @Description WHERE Id = @Id";
                 SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
-                sqlCmd.Parameters.AddWithValue("@Id", projectModel.Id);
-                sqlCmd.Parameters.AddWithValue("@Name", projectModel.Name);
-                sqlCmd.Parameters.AddWithValue("@Description", projectModel.Description);
+                sqlCmd.Parameters.AddWithValue("@Id", projectViewModel.Id);
+                sqlCmd.Parameters.AddWithValue("@Name", projectViewModel.Name);
+                sqlCmd.Parameters.AddWithValue("@Description", projectViewModel.Description);
                 sqlCmd.ExecuteNonQuery();
+
+                query = "DELETE FROM ProjectUser WHERE ProjectId = @Id";
+                sqlCmd = new SqlCommand(query, sqlCon);
+                sqlCmd.Parameters.AddWithValue("@Id", projectViewModel.Id);
+                sqlCmd.ExecuteNonQuery();
+
+                for (int i = 0; i < usersToAdd.Count; i++)
+                {
+                    query = "INSERT INTO ProjectUser VALUES(@Name, @ProjectId)";
+                    sqlCmd = new SqlCommand(query, sqlCon);
+                    sqlCmd.Parameters.AddWithValue("@Name", usersToAdd[i]);
+                    sqlCmd.Parameters.AddWithValue("@ProjectId", projectViewModel.Id);
+                    sqlCmd.ExecuteNonQuery();
+                }
+
+
             }
             return RedirectToAction("Index");
         }
@@ -211,6 +279,10 @@ namespace sdf_asp_net.Controllers
                 sqlCmd.Parameters.AddWithValue("@Id", id);
                 sqlCmd.ExecuteNonQuery();
                 query = "DELETE FROM Messageboards WHERE ProjectId = @Id";
+                sqlCmd = new SqlCommand(query, sqlCon);
+                sqlCmd.Parameters.AddWithValue("@Id", id);
+                sqlCmd.ExecuteNonQuery();
+                query = "DELETE FROM ProjectUser WHERE ProjectId = @Id";
                 sqlCmd = new SqlCommand(query, sqlCon);
                 sqlCmd.Parameters.AddWithValue("@Id", id);
                 sqlCmd.ExecuteNonQuery();

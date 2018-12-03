@@ -25,14 +25,6 @@ namespace sdf_asp_net.ViewModels
             Messages = new List<MessageViewModel>();
         }
 
-        public void ConvertStringMemberToArrayListMember(string member)
-        {
-            string[] splitedMembers = member.Split(';');
-            for(int i = 0; i < splitedMembers.Length; i++)
-            {
-                this.Member.Add(splitedMembers[i]);
-            }
-        }
 
     }
 }
