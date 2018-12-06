@@ -17,8 +17,6 @@ namespace sdf_asp_net
         // Weitere Informationen zum Konfigurieren der Authentifizierung finden Sie unter https://go.microsoft.com/fwlink/?LinkId=301864.
         public void ConfigureAuth(IAppBuilder app)
         {
-            // Any connection or hub wire up and configuration should go here |||| CHAT
-            app.MapSignalR();
 
             // Konfigurieren des db-Kontexts, des Benutzer-Managers und des Anmelde-Managers für die Verwendung einer einzelnen Instanz pro Anforderung.
             app.CreatePerOwinContext(ApplicationDbContext.Create);
