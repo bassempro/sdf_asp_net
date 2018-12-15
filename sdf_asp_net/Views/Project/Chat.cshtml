@@ -1,0 +1,58 @@
+﻿@model List<sdf_asp_net.Models.ChatModel>
+
+@{
+    ViewBag.Title = "Chat";
+}
+
+<h2>Chat</h2>
+<div class="row">
+    <div class="col-md-4">
+        <h3>Users</h3>
+        <ul id="user"></ul>
+    </div>
+    <div class="col-md-4">
+        <br />
+        <input type="text" id="txt" class="form-control" />
+        <button id="send" class="btn btn-success">Send</button>
+    </div>
+    <div class="col-md-4">
+        <h3>Message</h3>
+        <ul id="message"></ul>
+        @foreach (var _model in Model)
+        {
+            <li>gesendet: @_model.user : @_model.message | @_model.dateStamp </li>
+        }
+    </div>
+</div>
+
+@section scripts{
+
+    <script src="~/Scripts/jquery.signalR-2.4.0.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+    var hub = $.connection.chatHub;
+    hub.client.message = function (msg) {
+        $("#message").append("<li> " + $("#txt").val() + " </li>")
+        $("#txt").val(" ");
+    }
+
+    hub.client.user = function (msg) {
+    $("#user").append('<li>@User.Identity.Name'  +"</li>")
+    }
+
+        $.connection.hub.start(function () {
+            $("#send").click(function () {
+                hub.server.send("@User.Identity.Name", $("#txt").val());
+
+            });
+
+        });
+        function fillModel() {
+            var chatModel = {}
+            chatModel.id = 0;
+            chatModel.message = $("msg").val();
+            chatModel.user = "@User.Identity.Name";
+            chatModel.timeStamp = Date.now();
+        }
+    </script>
+}

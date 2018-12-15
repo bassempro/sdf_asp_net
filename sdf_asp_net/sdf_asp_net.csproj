@@ -201,7 +201,17 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Hubs\ChatHub.cs" />
+    <Compile Include="Migrations\201811221731449_InitialCreate.cs" />
+    <Compile Include="Migrations\201811221731449_InitialCreate.Designer.cs">
+      <DependentUpon>201811221731449_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201812142329267_first.cs" />
+    <Compile Include="Migrations\201812142329267_first.Designer.cs">
+      <DependentUpon>201812142329267_first.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ChatModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Project.cs" />
@@ -405,7 +415,7 @@
     <Content Include="Views\Account\EmailConfirmed.cshtml" />
     <Content Include="Views\Account\Confirm.cshtml" />
     <Content Include="Views\Shared\_Layout2.cshtml" />
-    <Content Include="Views\Project\_Chat.cshtml" />
+    <Content Include="Views\Project\Chat.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -420,6 +430,14 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201811221731449_InitialCreate.resx">
+      <DependentUpon>201811221731449_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812142329267_first.resx">
+      <DependentUpon>201812142329267_first.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

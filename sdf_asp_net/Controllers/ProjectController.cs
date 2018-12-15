@@ -18,18 +18,23 @@ namespace sdf_asp_net.Controllers
 
     public class ProjectController : Controller
     {
+        ApplicationDbContext _context;
+
+        public ProjectController()
+        {
+            _context = new ApplicationDbContext();
+        }
 
         public ActionResult Chat()
         {
-            return View();
+            var liste = _context.ChatModels.ToList();
+            return View(liste);
         }
 
         string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=aspnet-sdf_asp_net-20181114091107;Integrated Security=True";
         private ApplicationUserManager _userManager;
 
-        public ProjectController()
-        {
-        }
+        
 
         public ApplicationUserManager UserManager
         {
