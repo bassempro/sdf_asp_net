@@ -219,6 +219,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\MockUpService.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\MessageReplyModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\ProjectViewModel.cs" />
   </ItemGroup>

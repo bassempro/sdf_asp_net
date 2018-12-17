@@ -85,6 +85,7 @@ namespace sdf_asp_net.Controllers
             userName.ToString();
             DataTable dtblProject = new DataTable();
             DataTable dtblMessageboard = new DataTable();
+            DataTable dtblMessageboardReplies = new DataTable();
             DataTable dtblProjectUser = new DataTable();
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
@@ -128,6 +129,30 @@ namespace sdf_asp_net.Controllers
                     mvm.Date = dtblMessageboard.Rows[i][4].ToString();
                     mvm.FileName = dtblMessageboard.Rows[i][5].ToString();
                     mvm.FileContentType = dtblMessageboard.Rows[i][6].ToString();
+                    using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                    {
+                        sqlCon.Open();
+                        string query = "SELECT * FROM MessageboardReplies WHERE MessageboardId = @mId";
+                        SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+                        sqlDa.SelectCommand.Parameters.AddWithValue("@mId", dtblMessageboard.Rows[i][0].ToString());
+                        sqlDa.Fill(dtblMessageboardReplies);
+                    }
+                    for (int j = 0; j < dtblMessageboardReplies.Rows.Count; j++)
+                    {
+                        string info1 = dtblMessageboardReplies.Rows[j][3].ToString();
+                        string info2 = dtblMessageboard.Rows[i][0].ToString();
+                        System.Diagnostics.Debug.WriteLine(info1 + " compared to: " + info2);
+                        if (dtblMessageboardReplies.Rows[j][3].ToString() == dtblMessageboard.Rows[i][0].ToString())
+                        {
+                            MessageReplyModel mrm = new MessageReplyModel();
+                            mrm.Id = Convert.ToInt32(dtblMessageboardReplies.Rows[j][0]);
+                            mrm.Message = dtblMessageboardReplies.Rows[j][1].ToString();
+                            mrm.Author = dtblMessageboardReplies.Rows[j][2].ToString();
+                            mrm.Date = dtblMessageboardReplies.Rows[j][4].ToString();
+                            mvm.MessageReplies.Add(mrm);
+                            System.Diagnostics.Debug.WriteLine(mvm.MessageReplies.Count.ToString());
+                        }
+                    }
                     pvm.Messages.Add(mvm);
                 }
 
@@ -271,6 +296,35 @@ namespace sdf_asp_net.Controllers
 
             }
             return RedirectToAction("Index");
+        }
+
+
+        [HttpPost]
+        public ActionResult Reply(FormCollection collection)
+        {
+            string message = collection["message"];
+            string projectId = collection["projectId"];
+            int projectIdConverted = int.Parse(projectId);
+            if (message != null && message.Length > 2)
+            {
+                DateTime timeStamp = System.DateTime.Now;
+                int messageboardId = int.Parse(collection["messageboardId"]);
+                using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                {
+                    sqlCon.Open();
+                    string query = "INSERT INTO MessageboardReplies VALUES(@Message, @Author, @MessageboardId, @Time, @ProjectId)";
+                    SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                    sqlCmd.Parameters.AddWithValue("@Message", message);
+                    sqlCmd.Parameters.AddWithValue("@Author", User.Identity.GetUserName());
+                    sqlCmd.Parameters.AddWithValue("@MessageboardId", messageboardId);
+                    sqlCmd.Parameters.AddWithValue("@Time", timeStamp);
+                    sqlCmd.Parameters.AddWithValue("@ProjectId", projectIdConverted);
+
+                    sqlCmd.ExecuteNonQuery();
+                }
+            }
+
+            return RedirectToAction("DetailView/" + projectId);
         }
 
         // GET: Project/Delete/5

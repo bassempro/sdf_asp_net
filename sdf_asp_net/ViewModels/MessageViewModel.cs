@@ -14,5 +14,12 @@ namespace sdf_asp_net.ViewModels
         public string FileName { get; set; }
         public string FileContentType { get; set; }
         public byte[] FileData { get; set; }
+        public List<MessageReplyModel> MessageReplies { get; set; }
+
+        public MessageViewModel()
+        {
+            MessageReplies = new List<MessageReplyModel>();
+        }
+
     }
 }
