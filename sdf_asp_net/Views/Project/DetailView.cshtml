@@ -1,5 +1,5 @@
 ﻿@model sdf_asp_net.ViewModels.ProjectViewModel
-@*@model List<sdf_asp_net.Models.ChatModel>*@
+
 
 
 @{
@@ -16,88 +16,74 @@
         <hr class="my-4">
         <p>Projektleiter: @Html.DisplayFor(model => model.ManagerName) </p>
 
+        
+            @{Html.RenderAction("_Chat"); }
+        
+
+        </div>
 
 
-    </div>
 
-    <h2>Chat</h2>
+        @{string userName = Model.ManagerName;}
 
-    <div class="container">
-
-        <input type="text" id="messageGroup" />
-
-
-        <input type="button" id="btnSendGroup" value="Send to Group" />
-        <input type="hidden" id="displayname" />
-
-        <ul id="discussion"></ul>
-        @*@foreach (var _model in Model)
+        <hr />
+        @using (Html.BeginForm("DownloadFile", "Project", FormMethod.Post))
         {
-            <li>gesendet: @_model.user : @_model.message | @_model.dateStamp </li>
-        }*@
+            <input type="hidden" id="hfFileId" name="FileId" />
+            <input type="submit" id="btnDownload" value="Download" style="display:none" />
+        }
+        <div class="container">
+            <div class="row">
+                <div class="col-9">
+                    <h2>Messageboard</h2>
+                    <div class="list-group" style="height: 500px; overflow-y: scroll;">
 
-    </div>
-
-    @{string userName = Model.ManagerName;}
-
-    <hr />
-    @using (Html.BeginForm("DownloadFile", "Project", FormMethod.Post))
-    {
-        <input type="hidden" id="hfFileId" name="FileId" />
-        <input type="submit" id="btnDownload" value="Download" style="display:none" />
-    }
-    <div class="container">
-        <div class="row">
-            <div class="col-9">
-                <h2>Messageboard</h2>
-                <div class="list-group" style="height: 500px; overflow-y: scroll;">
-
-                    @for (int i = 0; i < Model.Messages.Count; i++)
-                    {
-                        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h2 class="mb-1">@Model.Messages[i].Message</h2>
-                                <small>veröffentlicht am: @Model.Messages[i].Date</small>
-                            </div>
-                            <small class="mb-1">von: @Model.Messages[i].Author</small>
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">@Model.Messages[i].FileName</h6>
-                                <small class="mb-1">@Model.Messages[i].FileContentType</small>
-                            </div>
-                        </a>
-                        if (@ViewBag.IsAuthorized != null && userName != null)
+                        @for (int i = 0; i < Model.Messages.Count; i++)
                         {
-                            if (userName.ToString().Contains(@ViewBag.IsAuthorized) && @Model.Messages[i].FileName.ToString().Length > 0)
+                            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h2 class="mb-1">@Model.Messages[i].Message</h2>
+                                    <small>veröffentlicht am: @Model.Messages[i].Date</small>
+                                </div>
+                                <small class="mb-1">von: @Model.Messages[i].Author</small>
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">@Model.Messages[i].FileName</h6>
+                                    <small class="mb-1">@Model.Messages[i].FileContentType</small>
+                                </div>
+                            </a>
+                            if (@ViewBag.IsAuthorized != null && userName != null)
                             {
-                                <a href="javascript:;" onclick="DownloadFile(@Model.Messages[i].Id)">Download</a>
+                                if (userName.ToString().Contains(@ViewBag.IsAuthorized) && @Model.Messages[i].FileName.ToString().Length > 0)
+                                {
+                                    <a href="javascript:;" onclick="DownloadFile(@Model.Messages[i].Id)">Download</a>
+                                }
                             }
+                            <br />
                         }
-                        <br />
-                    }
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <br />
-    @using (Html.BeginForm("Message", "Project", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
-        if (@ViewBag.IsAuthorized != null && userName != null)
+        <br />
+        @using (Html.BeginForm("Message", "Project", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
-            if (userName.ToString().Contains(@ViewBag.IsAuthorized))
+            if (@ViewBag.IsAuthorized != null && userName != null)
             {
-                <div class="input-group">
-                    <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Nachricht" aria-label="Message" aria-describedby="button-addon4">
-                    <input type="hidden" name="projectId" class="form-control" value="@Html.DisplayFor(model => model.Id)" aria-label="Message" aria-describedby="button-addon4">
-                    <div class="input-group-append" id="button-addon4">
-                        <input type="file" name="postedFile" class="btn btn-primary" />
-                        <input type="submit" id="btnUpload" value=">" class="btn btn-primary" />
+                if (userName.ToString().Contains(@ViewBag.IsAuthorized))
+                {
+                    <div class="input-group">
+                        <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Nachricht" aria-label="Message" aria-describedby="button-addon4">
+                        <input type="hidden" name="projectId" class="form-control" value="@Html.DisplayFor(model => model.Id)" aria-label="Message" aria-describedby="button-addon4">
+                        <div class="input-group-append" id="button-addon4">
+                            <input type="file" name="postedFile" class="btn btn-primary" />
+                            <input type="submit" id="btnUpload" value=">" class="btn btn-primary" />
+                        </div>
                     </div>
-                </div>
+                }
             }
         }
-    }
-</div>
+    </div>
 <br />
 
 <p>

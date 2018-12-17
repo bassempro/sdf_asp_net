@@ -25,7 +25,7 @@ namespace sdf_asp_net.Controllers
             _context = new ApplicationDbContext();
         }
 
-        public ActionResult Chat()
+        public ActionResult _Chat()
         {
             var liste = _context.ChatModels.ToList();
             return View(liste);
