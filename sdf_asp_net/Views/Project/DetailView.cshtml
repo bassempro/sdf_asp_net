@@ -17,7 +17,7 @@
         <p>Projektleiter: @Html.DisplayFor(model => model.ManagerName) </p>
 
 
-        @{Html.RenderAction("_Chat"); }
+        @*@{Html.RenderAction("_Chat"); }*@
 
 
     </div>
@@ -175,6 +175,12 @@
                     + '</strong>: ' + htmlEncode(message) + '</li>');
             };
 
+            chat.client.addNewMessageToAll = function (name, message) {
+
+                $('#discussion').append('<li><strong>' + htmlEncode(name)
+                    + '</strong>: ' + htmlEncode(message) + '</li>');
+            };
+
 
 
 
@@ -182,6 +188,13 @@
             $('#message').focus();
             // Start the connection.
             $.connection.hub.start().done(function () {
+
+                $('#btnSendAll').click(function () {
+                    chat.server.sendAll("@User.Identity.Name", $('#messageAll').val());
+                });
+
+
+
             chat.server.joinGroup("@User.Identity.Name","@Html.DisplayFor(model => model.Name)");
 
 

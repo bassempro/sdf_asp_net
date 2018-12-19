@@ -15,10 +15,18 @@ namespace sdf_asp_net.Hubs
         {
             _context = new ApplicationDbContext();
         }
+
+        public void SendAll(string name, string message)
+        {
+            Clients.All.addNewMessageToAll(name + " : " + message);
+        }
+
         public void SendGroups(string name,string groupName, string message)
         {
             // Call the addNewMessageToPage method to update clients.
             Clients.Group(groupName).addNewMessageToPage(name + ": " + message);
+            
+            
 
             ChatModel chatModel = new ChatModel()
             {
@@ -44,7 +52,7 @@ namespace sdf_asp_net.Hubs
 
         public override Task OnConnected()
         {
-            Clients.Caller.addNewMessageToPage("Connected");
+            Clients.Caller.addNewMessageToPage($"{Context.ConnectionId}" + "is connected ["+DateTime.Now+"]");
             return base.OnConnected();
         }
 

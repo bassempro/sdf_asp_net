@@ -3,19 +3,27 @@
 
 
 <h2>Chat</h2>
-<div class="container">
 
-    <input type="text" id="messageGroup" />
+<label>All</label>
+<input type="text" id="messageAll" />
+<input type="button" id="btnSendAll" value="Send to all" />
+<input type="hidden" id="displayname" />
+
+<label>Group</label>
+<input type="text" id="messageGroup" />
+<input type="button" id="btnSendGroup" value="Send to Group" />
+<input type="hidden" id="displayname" />
+<br />
+<p></p>
 
 
-    <input type="button" id="btnSendGroup" value="Send to Group" />
-    <input type="hidden" id="displayname" />
 
-    
-    <ul id="discussion"></ul>
-    @foreach (var _model in Model)
-    {
-        <li>gesendet: @_model.user : @_model.message | @_model.dateStamp </li>
-    }
 
-</div>
+
+<ul id="discussion"></ul>
+@foreach (var _model in Model)
+{
+    <li>gesendet: @_model.user : @_model.message | @_model.dateStamp </li>
+}
+
+
