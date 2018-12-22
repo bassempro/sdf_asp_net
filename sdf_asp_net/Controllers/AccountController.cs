@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -9,6 +11,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using sdf_asp_net.Models;
+using sdf_asp_net.ViewModels;
 
 namespace sdf_asp_net.Controllers
 {
@@ -17,10 +20,12 @@ namespace sdf_asp_net.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-
+        ApplicationDbContext _context;
         public AccountController()
         {
+            _context = new ApplicationDbContext();
         }
+     
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
@@ -55,12 +60,13 @@ namespace sdf_asp_net.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login(string returnUrl )
         {
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
-
+        string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=aspnet-sdf_asp_net-20181114091107;Integrated Security=True";
+      
         //
         // POST: /Account/Login
         [HttpPost]
@@ -70,12 +76,41 @@ namespace sdf_asp_net.Controllers
         {
             if (ModelState.IsValid)
             {
+                System.Web.Security.FormsAuthentication.SetAuthCookie(model.Email, false);
                 var user = await UserManager.FindAsync(model.Email, model.Password);
+                
                 if (user != null)
                 {
                     if (user.EmailConfirmed == true)
                     {
-                        await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+                        string username = user.UserName;
+                        string idconncted = user.Id;
+                        TempData["ID"] = idconncted;
+                        bool connected = true;
+                      /*  using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                        {
+                            sqlCon.Open();
+                            string query = "UPDATE Chatstand SET (@Id,@Stand) WHERE Id=@Id";
+                    
+                            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                            sqlCmd.Parameters.AddWithValue("@Id", idconncted);
+                            sqlCmd.Parameters.AddWithValue("@Stand",connected);
+
+                          
+                            sqlCmd.ExecuteNonQuery();
+                        }
+                       */
+                        using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                        {
+                            sqlCon.Open();
+                            string query = "Update Chatstand SET  Stand = @Stand  WHERE Id =@Id IF @@ROWCOUNT=0 INSERT INTO Chatstand VALUES (@Id,@Stand,@Username) ";
+                            SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                            sqlCmd.Parameters.AddWithValue("@Stand", connected);
+                            sqlCmd.Parameters.AddWithValue("@Id", idconncted);
+                            sqlCmd.Parameters.AddWithValue("@Username", username);
+                            sqlCmd.ExecuteNonQuery();
+                        }
+                            await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
                         return RedirectToAction("Index", "Project");
                     }
                     else
@@ -86,10 +121,10 @@ namespace sdf_asp_net.Controllers
                 else
                 {
                     ModelState.AddModelError("", "Invalid username or password.");
-                }
+                }              
             }
-            // If we got this far, something failed, redisplay form
-            return View(model);
+                // If we got this far, something failed, redisplay form
+                return View(model);
         }
 
         //
@@ -135,6 +170,42 @@ namespace sdf_asp_net.Controllers
             }
         }
 
+
+         [HttpPost]
+        public ActionResult Chatlist()
+        {
+            ProjectViewModel cvm = new ProjectViewModel();
+            DataTable dtblChatstand = new DataTable();
+            using (SqlConnection sqlCon = new SqlConnection(connectionString))
+            {
+                bool Stand = true;
+                string query = "SELECT Username FROM Chatstand ";
+                SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+                sqlDa = new SqlDataAdapter(query, sqlCon);
+                sqlDa.SelectCommand.Parameters.AddWithValue("@Stand", Stand);
+                sqlDa.Fill(dtblChatstand);
+            }
+            if (dtblChatstand.Rows.Count == 1)
+            {
+
+
+                cvm.Username = dtblChatstand.Rows[0][2].ToString();
+
+
+
+                for (int i = 0; i < dtblChatstand.Rows.Count; i++)
+
+                {
+                    cvm.Chatlist.Add(dtblChatstand.Rows[i][0].ToString());
+                }
+
+                return View(cvm);
+            }
+            else
+                return RedirectToAction("Index");
+
+                
+            }
         //
         // GET: /Account/Register
         [AllowAnonymous]
@@ -451,7 +522,19 @@ namespace sdf_asp_net.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            string idconncted =TempData["ID"].ToString();
+            bool connected = false;
+            using (SqlConnection sqlCon = new SqlConnection(connectionString))
+            {
+                sqlCon.Open();
+                string query = "Update Chatstand SET  Stand = @Stand WHERE Id =@Id";
+                SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                sqlCmd.Parameters.AddWithValue("@Stand", connected);
+                sqlCmd.Parameters.AddWithValue("@Id", idconncted);
+                sqlCmd.ExecuteNonQuery();
+            }
             return RedirectToAction("Index", "Home");
         }
 
