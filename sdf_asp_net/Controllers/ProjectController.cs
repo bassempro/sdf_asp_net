@@ -246,8 +246,6 @@ namespace sdf_asp_net.Controllers
                 {
                     projectModel.Member.Add(allUsers[i].UserName);
                 }
-
-
                 return View(projectModel);
             }
             else

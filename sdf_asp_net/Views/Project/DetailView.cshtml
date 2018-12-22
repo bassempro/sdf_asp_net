@@ -83,7 +83,7 @@
 
     <br />
     @using (Html.BeginForm("Message", "Project", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
+    { 
         if (@ViewBag.IsAuthorized != null && userName != null)
         {
             if (userName.ToString().Contains(@ViewBag.IsAuthorized))
