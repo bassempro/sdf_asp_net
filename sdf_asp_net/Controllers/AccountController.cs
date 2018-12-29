@@ -177,6 +177,8 @@ namespace sdf_asp_net.Controllers
                     System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient();
                     client.EnableSsl = true;
                     smtp.Send(m);
+
+                    //comment out the block until this line for testing purposes (no email confirmation part 1)
                     return RedirectToAction("Confirm", "Account");
                 }
                 AddErrors(result);
@@ -209,6 +211,7 @@ namespace sdf_asp_net.Controllers
                     await UserManager.UpdateAsync(user);
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
+                    //comment out the block until this line for testing purposes (no email confirmation part 2)
                     return RedirectToAction("EmailConfirmed", "Account", new { ConfirmedEmail = user.Email });
                 }
                 else

@@ -28,5 +28,19 @@ namespace sdf_asp_net.Controllers
 
             return View();
         }
+        public ActionResult MyCalendar()
+        {
+            ViewBag.Message = "Calendar info";
+
+            return View();
+        }
+        public JsonResult GetEvents()
+        {
+            using (MyCalendarEntities dc = new MyCalendarEntities())
+            {
+                var events = dc.Events.ToList();
+                return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+        }
     }
 }
