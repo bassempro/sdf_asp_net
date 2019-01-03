@@ -162,10 +162,10 @@ namespace sdf_asp_net.Controllers
                     // await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
-         new System.Net.Mail.MailAddress("sdf.asp.donet@gmail.com", "Konto Verifizierung"),
-         new System.Net.Mail.MailAddress(user.Email));
+                         new System.Net.Mail.MailAddress("sdf.asp.donet@gmail.com", "Konto Verifizierung"),
+                             new System.Net.Mail.MailAddress(user.Email));
                     m.Subject = "Email confirmation";
-                    m.Body = string.Format("Dear {0}< BR /> Danke für Ihre Registrierung , bitte klicken Sie den link hier um Ihren Konto zu bestätigen : < a href =\"{1} title =\"User Email Confirm\">{1}</a>",
+                    m.Body = string.Format("Dear {0}< BR /> Danke für Ihre Registrierung , bitte klicken Sie den Link hier, um Ihr Konto zu bestätigen: < a href =\"{1} title =\"User Email Confirm\">{1}</a>",
                     user.UserName, Url.Action("ConfirmEmail", "Account", new { Token = user.Email, Email = user.Email }, Request.Url.Scheme));
                     m.IsBodyHtml = true;
                     System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.gmail.com");

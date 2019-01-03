@@ -135,7 +135,7 @@ namespace sdf_asp_net.Controllers
                 sqlDa = new SqlDataAdapter(query, sqlCon);
                 sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
                 sqlDa.Fill(dtblProjectUser);
-            }
+            }          
             if (dtblProject.Rows.Count == 1)
             {
                 ProjectViewModel pvm = new ProjectViewModel();
@@ -149,8 +149,6 @@ namespace sdf_asp_net.Controllers
                 {
                     pvm.Member.Add(dtblProjectUser.Rows[i][1].ToString());
                 }
-
-
                 for (int i = 0; i < dtblMessageboard.Rows.Count; i++)
                 {
                     MessageViewModel mvm = new MessageViewModel();
@@ -277,8 +275,6 @@ namespace sdf_asp_net.Controllers
                 {
                     projectModel.Member.Add(allUsers[i].UserName);
                 }
-
-
                 return View(projectModel);
             }
             else
