@@ -92,18 +92,40 @@
                     <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Nachricht" aria-label="Message" aria-describedby="button-addon4">
                     <input type="hidden" name="projectId" class="form-control" value="@Html.DisplayFor(model => model.Id)" aria-label="Message" aria-describedby="button-addon4">
                     <div class="input-group-append" id="button-addon4">
-                        <input type="file" name="postedFile" class="btn btn-primary" />
-                        <input type="submit" id="btnUpload" value=">" class="btn btn-primary" />
+                        <input type="file" name="postedFile" id="imgInp" class="btn btn-primary" />
+                            <input type="button" value="Vorschau" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" />
+
+                            <!-- Modal for Image Preview -->
+                            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLongTitle">Vorschau</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <iframe id="blah" style="width: 100%; height: 500px; display: none;" src="#" alt="ausgewählte Datei"></iframe>
+                                            <p id="noPreview" style="display: inline;">
+                                                Es ist keine Vorschau verfügbar.
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <input type="submit" id="btnUpload" value=">" class="btn btn-primary" />
+                        </div>
                     </div>
-                </div>
             }
         }
     }
 </div>
 <br />
-
-
-
 
 <p>
     <a href="@Url.Action("Index", "Project")" class="btn btn-success float-right btn-lg" role="button" aria-pressed="true">Zurück zu der Projektliste</a>
@@ -181,10 +203,6 @@
                     + '</strong>: ' + htmlEncode(message) + '</li>');
             };
 
-
-
-
-
             $('#message').focus();
             // Start the connection.
             $.connection.hub.start().done(function () {
@@ -202,8 +220,6 @@
                     chat.server.sendGroups("@User.Identity.Name","@Html.DisplayFor(model => model.Name)", $('#messageGroup').val());
                 });
 
-
-
             });
         });
         // This optional function html-encodes messages for display in the page.
@@ -217,6 +233,30 @@
             chatModel.message = $("msg").val();
             chatModel.user = "@User.Identity.Name";
             chatModel.timeStamp = Date.now();
+        }
+        //image preview
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                var file = input.files[0];
+                if (file.type.match('pdf.*') || file.type.match('image.*')) {
+                    $('#noPreview').css('display', 'none')
+                    $('#blah').css('display', 'inline')
+
+                    reader.onload = function (e) {
+                        $('#blah').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                    $('#myModal').css('display', 'inline')
+                }
+                else {
+                    $('#blah').css('display', 'none')
+                    $('#noPreview').css('display', 'inline')
+                }
             }
+        }
+        $("#imgInp").change(function () {
+            readURL(this);
+        });
     </script>
 }

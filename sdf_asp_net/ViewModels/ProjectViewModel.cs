@@ -16,9 +16,6 @@ namespace sdf_asp_net.ViewModels
         public string ManagerId { get; set; }
         public string ManagerName { get; set; }
         public List<MessageViewModel> Messages { get; set; }
-
-
-
         public ProjectViewModel()
         {
             Member = new List<string>();
