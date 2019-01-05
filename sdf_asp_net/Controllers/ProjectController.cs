@@ -55,12 +55,44 @@ namespace sdf_asp_net.Controllers
             var userName = User.Identity.GetUserName();
             ViewBag.Username = userName;
             DataTable dtblProjects = new DataTable();
+            
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
                 sqlCon.Open();
                 SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * FROM Projects", sqlCon);
                 sqlDa.Fill(dtblProjects);
             }
+
+            for(int i = 0; i < dtblProjects.Rows.Count; i++)
+            {
+                DataTable dtblProjectUser = new DataTable();
+                string id = dtblProjects.Rows[i][0].ToString();
+                using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                {
+                    sqlCon.Open();
+                    string query = "SELECT * FROM ProjectUser WHERE ProjectId = @Id";
+                    SqlDataAdapter sqlDa = new SqlDataAdapter(query, sqlCon);
+                    sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
+                    sqlDa.Fill(dtblProjectUser);
+                }
+                bool contains = false;
+                for(int j = 0; j < dtblProjectUser.Rows.Count; j++)
+                {
+                    if (dtblProjectUser.Rows[j][1].ToString().Trim().ToLower().Equals(userName.ToString().Trim().ToLower()) || dtblProjects.Rows[i][4].ToString().Trim().ToLower().Equals(userName.ToString().Trim().ToLower()))
+                    {
+                        contains = true;
+                    }
+                }
+                
+                if (!contains)
+                {
+                    dtblProjects.Rows.RemoveAt(i);
+                    i--;
+                }
+
+
+            }
+
                 return View(dtblProjects);
         }
 
@@ -82,7 +114,6 @@ namespace sdf_asp_net.Controllers
         public ActionResult DetailView(int id)
         {
             var userName = User.Identity.GetUserName();
-            userName.ToString();
             DataTable dtblProject = new DataTable();
             DataTable dtblMessageboard = new DataTable();
             DataTable dtblMessageboardReplies = new DataTable();
@@ -104,7 +135,7 @@ namespace sdf_asp_net.Controllers
                 sqlDa = new SqlDataAdapter(query, sqlCon);
                 sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
                 sqlDa.Fill(dtblProjectUser);
-            }
+            }          
             if (dtblProject.Rows.Count == 1)
             {
                 ProjectViewModel pvm = new ProjectViewModel();
@@ -118,8 +149,6 @@ namespace sdf_asp_net.Controllers
                 {
                     pvm.Member.Add(dtblProjectUser.Rows[i][1].ToString());
                 }
-
-
                 for (int i = 0; i < dtblMessageboard.Rows.Count; i++)
                 {
                     MessageViewModel mvm = new MessageViewModel();
