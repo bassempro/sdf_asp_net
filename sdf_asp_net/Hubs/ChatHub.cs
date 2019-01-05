@@ -46,13 +46,15 @@ namespace sdf_asp_net.Hubs
         {
             Groups.Add(Context.ConnectionId, groupName);
             Clients.Group(groupName).addNewMessageToPage($"{name} join [{groupName}]");
+            
 
         }
 
 
         public override Task OnConnected()
         {
-            Clients.Caller.addNewMessageToPage($"{Context.ConnectionId}" + "is connected ["+DateTime.Now+"]");
+
+            Clients.Caller.addNewMessageToPage(" is connected ["+DateTime.Now+"]");
             return base.OnConnected();
         }
 
