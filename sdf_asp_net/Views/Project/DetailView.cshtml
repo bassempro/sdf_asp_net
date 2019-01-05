@@ -6,6 +6,29 @@
     Layout = "~/Views/Shared/_Layout2.cshtml";
     ViewBag.Title = "DetailView";
 }
+<style>
+    .test {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: #512DA8;
+        font-size: 20px;
+        color: #fff;
+        text-align: center;
+        line-height: 45px;
+        margin: 5px 0;
+    }
+
+    #profileImg {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        margin: 20px 0;
+    }
+</style>
+
+
+
 <div class="col-md-12">
 </div>
 <div>
@@ -83,7 +106,7 @@
 
     <br />
     @using (Html.BeginForm("Message", "Project", FormMethod.Post, new { enctype = "multipart/form-data" }))
-    { 
+    {
         if (@ViewBag.IsAuthorized != null && userName != null)
         {
             if (userName.ToString().Contains(@ViewBag.IsAuthorized))
@@ -93,34 +116,34 @@
                     <input type="hidden" name="projectId" class="form-control" value="@Html.DisplayFor(model => model.Id)" aria-label="Message" aria-describedby="button-addon4">
                     <div class="input-group-append" id="button-addon4">
                         <input type="file" name="postedFile" id="imgInp" class="btn btn-primary" />
-                            <input type="button" value="Vorschau" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" />
+                        <input type="button" value="Vorschau" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" />
 
-                            <!-- Modal for Image Preview -->
-                            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLongTitle">Vorschau</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <iframe id="blah" style="width: 100%; height: 500px; display: none;" src="#" alt="ausgewählte Datei"></iframe>
-                                            <p id="noPreview" style="display: inline;">
-                                                Es ist keine Vorschau verfügbar.
-                                            </p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
-                                        </div>
+                        <!-- Modal for Image Preview -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Vorschau</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <iframe id="blah" style="width: 100%; height: 500px; display: none;" src="#" alt="ausgewählte Datei"></iframe>
+                                        <p id="noPreview" style="display: inline;">
+                                            Es ist keine Vorschau verfügbar.
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
                                     </div>
                                 </div>
                             </div>
-
-                            <input type="submit" id="btnUpload" value=">" class="btn btn-primary" />
                         </div>
+
+                        <input type="submit" id="btnUpload" value=">" class="btn btn-primary" />
                     </div>
+                </div>
             }
         }
     }
@@ -154,8 +177,10 @@
                     <ul class="list-group">
                         @for (int j = 0; j < Model.Messages[i].MessageReplies.Count; j++)
                         {
-                        <li>@Model.Messages[i].MessageReplies[j].Author schrieb am @Model.Messages[i].MessageReplies[j].Date.ToString()
-                        : @Model.Messages[i].MessageReplies[j].Message</li>
+                            <li>
+                                @Model.Messages[i].MessageReplies[j].Author schrieb am @Model.Messages[i].MessageReplies[j].Date.ToString()
+                                : @Model.Messages[i].MessageReplies[j].Message
+                            </li>
                         }
 
                     </ul>

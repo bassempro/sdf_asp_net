@@ -22,6 +22,7 @@ namespace sdf_asp_net.ViewModels
             Messages = new List<MessageViewModel>();
         }
 
+        public byte[] ProfileImage { get; set; }
 
     }
 }

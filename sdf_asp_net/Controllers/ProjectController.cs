@@ -118,6 +118,8 @@ namespace sdf_asp_net.Controllers
             DataTable dtblMessageboard = new DataTable();
             DataTable dtblMessageboardReplies = new DataTable();
             DataTable dtblProjectUser = new DataTable();
+            byte[] profileImage = null;
+            string contentType = "";
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
                 sqlCon.Open();
@@ -135,7 +137,26 @@ namespace sdf_asp_net.Controllers
                 sqlDa = new SqlDataAdapter(query, sqlCon);
                 sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
                 sqlDa.Fill(dtblProjectUser);
-            }          
+
+                string selectQuery = "SELECT AspNetUsers.ProfileImage, AspNetUsers.FileContentType FROM AspNetUsers, ProjectUser WHERE ProjectUser.ProjectId = " + id + " AND AspNetUsers.UserName = ProjectUser.Name";
+
+                // Read Byte [] Value from Sql Table 
+                SqlCommand selectCommand = new SqlCommand(selectQuery, sqlCon);
+                SqlDataReader reader;
+                reader = selectCommand.ExecuteReader();
+                if (reader != null)
+                {
+                    if (reader.Read() && !System.Convert.IsDBNull(reader.GetValue(0)))
+                    {
+                        profileImage = (byte[])reader.GetValue(0);
+                        contentType = (string)reader.GetValue(1);
+
+                        ViewBag.imgSrc = string.Format("data:{0};base64,{1}",
+                            contentType, Convert.ToBase64String(profileImage));
+                    }
+                }
+            }
+            
             if (dtblProject.Rows.Count == 1)
             {
                 ProjectViewModel pvm = new ProjectViewModel();

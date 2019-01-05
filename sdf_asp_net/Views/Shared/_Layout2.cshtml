@@ -38,7 +38,15 @@
             </ul>
         </div>
     </nav>
-
+    <!--BEGIN Frontend default dynamic initials profile picture-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        function myfunction(member) {
+            var intials = member.charAt(0);
+            var profileImage = document.getElementById("profileImage" + member).innerHTML = intials;
+        }
+    </script>
+    <!--END Frontend default dynamic initials profile picture-->
 
     <div class="row">
         <div class="leftcolumn">
@@ -51,10 +59,7 @@
             <div class="card">
 
                 <ul class="list-group list-group-flush">
-                    <button type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#userListeModal"> Nutzerliste </button>
-
-
-
+                    <button id="modal_btn" type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#userListeModal"> Nutzerliste </button>
                     @*<button type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#chatModal"> Chat </button>*@
                 </ul>
             </div>
@@ -74,13 +79,10 @@
                 <p></p>
                 <ul id="discussion"></ul>
                 @*@foreach (var _model in Model)
-                {
-                    <li>gesendet: @_model.user : @_model.message | @_model.dateStamp </li>
-                }*@
+                    {
+                        <li>gesendet: @_model.user : @_model.message | @_model.dateStamp </li>
+                    }*@
             </div>
-
-
-
 
         </div>
     </div>
@@ -102,7 +104,42 @@
                     <ul class="list-group">
                         @foreach (var member in Model.Member)
                         {
-                            <li class="list-group-item list-group-item-info">@member</li>
+                            if (Model.ProfileImage == null)
+                            {
+
+                                <li class="list-group-item list-group-item-info">
+                                    <div class="col-xs-6 col-md-4">
+                                        <div id="@member" class="test">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-8">
+                                        <div>
+                                            @member
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <script type="text/javascript">
+                                    var member = @Html.Raw(Json.Encode(@member));
+
+                                    var applicationArea = document.getElementById(member);
+                                    var applicationArea2 = document.getElementById(member + "1234");
+
+                                    var newDiv = document.createElement("div");
+                                    newDiv.id = 'profileImage' + member;
+                                    newDiv.class = 'test';
+                                    applicationArea.appendChild(newDiv);
+
+                                    myfunction(member);
+                                </script>
+                            }
+                            if (Model.ProfileImage != null)
+                            {
+                                <li class="list-group-item list-group-item-info">
+                                    <img id="profileImg" src="@ViewBag.imgSrc" />
+                                </li>
+                            }
                         }
                     </ul>
                 </div>
@@ -124,7 +161,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="container">
-                        
+
 
                     </div>
                 </div>
