@@ -42,8 +42,34 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
         function myfunction(member) {
+            var divId = "profileImage" + member;
             var intials = member.charAt(0);
-            var profileImage = document.getElementById("profileImage" + member).innerHTML = intials;
+            var rand = Math.floor(0xfffff * Math.random());
+            var color = '#' + rand;
+            document.getElementById(divId).style.backgroundColor = color;
+            document.getElementById(divId).style.borderRadius = '50%';
+            document.getElementById(divId).style.borderStyle = 'solid';
+            document.getElementById(divId).style.borderColor = '#fff';
+            document.getElementById(divId).style.borderWidth = '1px';
+            document.getElementById(divId).style.width = '50px';
+            document.getElementById(divId).style.height = '50px';
+            document.getElementById(divId).style.fontSize = '20px';
+            var profileImage = document.getElementById(divId).innerHTML = intials;
+        }
+        function myfunction2(member, i) {
+            var divId = "profileImage" + member + i;
+            var intials = member.charAt(0);
+            var rand = Math.floor(0xfffff * Math.random());
+            var color = '#' + rand;
+            document.getElementById(divId).style.backgroundColor = color;
+            document.getElementById(divId).style.borderRadius = '50%';
+            document.getElementById(divId).style.borderStyle = 'solid';
+            document.getElementById(divId).style.borderColor = '#fff';
+            document.getElementById(divId).style.borderWidth = '1px';
+            document.getElementById(divId).style.width = '80px';
+            document.getElementById(divId).style.height = '80px';
+            document.getElementById(divId).style.fontSize = '40px';
+            var profileImage = document.getElementById(divId).innerHTML = intials;
         }
     </script>
     <!--END Frontend default dynamic initials profile picture-->
@@ -104,16 +130,31 @@
                     <ul class="list-group">
                         @foreach (var member in Model.Member)
                         {
-                            if (Model.ProfileImage == null)
-                            {
+                            string value = "";
+                            string key = Convert.ToString(member);
 
+                            if (@ViewBag.Images.TryGetValue(key.Trim(), out value))
+                            {
                                 <li class="list-group-item list-group-item-info">
-                                    <div class="col-xs-6 col-md-4">
+                                    <div style="display: inline-block;">
+                                        <img id="profileImg" src="@value" />
+                                    </div>
+                                    <div style="display: inline-block;">
+                                        <div>
+                                            @member
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item list-group-item-info">
+                                    <div style="display: inline-block;">
                                         <div id="@member" class="test">
 
                                         </div>
                                     </div>
-                                    <div class="col-xs-12 col-md-8">
+                                    <div style="display: inline-block;">
                                         <div>
                                             @member
                                         </div>
@@ -121,24 +162,18 @@
                                 </li>
 
                                 <script type="text/javascript">
-                                    var member = @Html.Raw(Json.Encode(@member));
+                                        var member = @Html.Raw(Json.Encode(@member));
 
-                                    var applicationArea = document.getElementById(member);
-                                    var applicationArea2 = document.getElementById(member + "1234");
+                                        var applicationArea = document.getElementById(member);
+                                        var applicationArea2 = document.getElementById(member + "1234");
 
-                                    var newDiv = document.createElement("div");
-                                    newDiv.id = 'profileImage' + member;
-                                    newDiv.class = 'test';
-                                    applicationArea.appendChild(newDiv);
+                                        var newDiv = document.createElement("div");
+                                        newDiv.id = 'profileImage' + member;
+                                           newDiv.class = 'test';
+                                        applicationArea.appendChild(newDiv);
 
-                                    myfunction(member);
+                                        myfunction(member);
                                 </script>
-                            }
-                            if (Model.ProfileImage != null)
-                            {
-                                <li class="list-group-item list-group-item-info">
-                                    <img id="profileImg" src="@ViewBag.imgSrc" />
-                                </li>
                             }
                         }
                     </ul>
