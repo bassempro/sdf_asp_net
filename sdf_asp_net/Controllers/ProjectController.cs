@@ -10,6 +10,8 @@ using sdf_asp_net.ViewModels;
 using Microsoft.AspNet.Identity;
 using System.IO;
 using System.Collections.Generic;
+using System.Diagnostics;
+
 
 namespace sdf_asp_net.Controllers
 {
@@ -118,6 +120,10 @@ namespace sdf_asp_net.Controllers
             DataTable dtblMessageboard = new DataTable();
             DataTable dtblMessageboardReplies = new DataTable();
             DataTable dtblProjectUser = new DataTable();
+            DataTable img = new DataTable();
+
+            byte[] profileImage = null;
+            string contentType = "";
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
                 sqlCon.Open();
@@ -135,7 +141,63 @@ namespace sdf_asp_net.Controllers
                 sqlDa = new SqlDataAdapter(query, sqlCon);
                 sqlDa.SelectCommand.Parameters.AddWithValue("@Id", id);
                 sqlDa.Fill(dtblProjectUser);
-            }          
+
+                string selectQuery = "SELECT AspNetUsers.ProfileImage, AspNetUsers.FileContentType, AspNetUsers.UserName FROM AspNetUsers, ProjectUser WHERE ProjectUser.ProjectId = " + id + " AND AspNetUsers.UserName = ProjectUser.Name";
+
+                // Read Byte [] Value from Sql Table 
+                SqlCommand selectCommand = new SqlCommand(selectQuery, sqlCon);
+
+                sqlDa = new SqlDataAdapter(selectQuery, sqlCon);
+                sqlDa.Fill(img);
+
+/*
+                SqlDataReader reader;
+                reader = selectCommand.ExecuteReader();
+                Dictionary<string, string> images = new Dictionary<string, string>();
+                if (reader != null)
+                {
+                    if (reader.Read() && !System.Convert.IsDBNull(reader.GetValue(0)))
+                    {
+                        profileImage = (byte[])reader.GetValue(0);
+                        contentType = Convert.ToString(reader.GetValue(1));
+                        userName = Convert.ToString(reader.GetValue(2));
+
+                        images.Add("testo", "test");
+
+                        images.Add(userName, string.Format("data:{0};base64,{1}",
+                            contentType, Convert.ToBase64String(profileImage)));
+                        Debug.WriteLine(userName);
+                        Debug.WriteLine("++++++++++++++++++ " + userName +" "+ string.Format("data:{0};base64,{1}",
+                            contentType, Convert.ToBase64String(profileImage)));
+
+                    }
+                }
+                */
+                //ViewBag.Images = images;
+            }
+
+            Dictionary<string, string> images = new Dictionary<string, string>();
+            Debug.WriteLine("++++++++++++++++++ " + img.Rows.Count);
+            images.Add("testo","test");
+            if (img.Rows.Count >= 1)
+            {
+                for (int i = 0; i < img.Rows.Count; i++)
+                {
+                    if (img.Rows[i][0] != System.DBNull.Value && img.Rows[i][1] != System.DBNull.Value && img.Rows[i][2] != System.DBNull.Value)
+                    {
+                        profileImage = (byte[])img.Rows[i][0];
+                        contentType = img.Rows[i][1].ToString();
+                        userName = img.Rows[i][2].ToString();
+
+                        Debug.WriteLine("++++++++++++++++++ " + img.Rows.Count + " " + userName);
+
+                        images.Add(userName, string.Format("data:{0};base64,{1}", contentType, Convert.ToBase64String(profileImage)));
+                    }
+
+                }
+            }
+            ViewBag.Images = images;
+
             if (dtblProject.Rows.Count == 1)
             {
                 ProjectViewModel pvm = new ProjectViewModel();

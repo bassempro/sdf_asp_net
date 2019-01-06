@@ -38,7 +38,41 @@
             </ul>
         </div>
     </nav>
-
+    <!--BEGIN Frontend default dynamic initials profile picture-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        function myfunction(member) {
+            var divId = "profileImage" + member;
+            var intials = member.charAt(0);
+            var rand = Math.floor(0xfffff * Math.random());
+            var color = '#' + rand;
+            document.getElementById(divId).style.backgroundColor = color;
+            document.getElementById(divId).style.borderRadius = '50%';
+            document.getElementById(divId).style.borderStyle = 'solid';
+            document.getElementById(divId).style.borderColor = '#fff';
+            document.getElementById(divId).style.borderWidth = '1px';
+            document.getElementById(divId).style.width = '50px';
+            document.getElementById(divId).style.height = '50px';
+            document.getElementById(divId).style.fontSize = '20px';
+            var profileImage = document.getElementById(divId).innerHTML = intials;
+        }
+        function myfunction2(member, i) {
+            var divId = "profileImage" + member + i;
+            var intials = member.charAt(0);
+            var rand = Math.floor(0xfffff * Math.random());
+            var color = '#' + rand;
+            document.getElementById(divId).style.backgroundColor = color;
+            document.getElementById(divId).style.borderRadius = '50%';
+            document.getElementById(divId).style.borderStyle = 'solid';
+            document.getElementById(divId).style.borderColor = '#fff';
+            document.getElementById(divId).style.borderWidth = '1px';
+            document.getElementById(divId).style.width = '80px';
+            document.getElementById(divId).style.height = '80px';
+            document.getElementById(divId).style.fontSize = '40px';
+            var profileImage = document.getElementById(divId).innerHTML = intials;
+        }
+    </script>
+    <!--END Frontend default dynamic initials profile picture-->
 
     <div class="row">
         <div class="leftcolumn">
@@ -51,10 +85,7 @@
             <div class="card">
 
                 <ul class="list-group list-group-flush">
-                    <button type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#userListeModal"> Nutzerliste </button>
-
-
-
+                    <button id="modal_btn" type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#userListeModal"> Nutzerliste </button>
                     @*<button type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#chatModal"> Chat </button>*@
                 </ul>
             </div>
@@ -67,9 +98,6 @@
 
                 </div>
             </div>
-
-
-
 
         </div>
     </div>
@@ -91,7 +119,51 @@
                     <ul class="list-group">
                         @foreach (var member in Model.Member)
                         {
-                            <li class="list-group-item list-group-item-info">@member</li>
+                            string value = "";
+                            string key = Convert.ToString(member);
+
+                            if (@ViewBag.Images.TryGetValue(key.Trim(), out value))
+                            {
+                                <li class="list-group-item list-group-item-info">
+                                    <div style="display: inline-block;">
+                                        <img id="profileImg" src="@value" />
+                                    </div>
+                                    <div style="display: inline-block;">
+                                        <div>
+                                            @member
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item list-group-item-info">
+                                    <div style="display: inline-block;">
+                                        <div id="@member" class="test">
+
+                                        </div>
+                                    </div>
+                                    <div style="display: inline-block;">
+                                        <div>
+                                            @member
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <script type="text/javascript">
+                                        var member = @Html.Raw(Json.Encode(@member));
+
+                                        var applicationArea = document.getElementById(member);
+                                        var applicationArea2 = document.getElementById(member + "1234");
+
+                                        var newDiv = document.createElement("div");
+                                        newDiv.id = 'profileImage' + member;
+                                           newDiv.class = 'test';
+                                        applicationArea.appendChild(newDiv);
+
+                                        myfunction(member);
+                                </script>
+                            }
                         }
                     </ul>
                 </div>
@@ -113,7 +185,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="container">
-                        
+
 
                     </div>
                 </div>

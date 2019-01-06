@@ -6,6 +6,43 @@
     Layout = "~/Views/Shared/_Layout2.cshtml";
     ViewBag.Title = "DetailView";
 }
+<style>
+    .test {
+        color: #fff;
+        text-align: center;
+        line-height: 45px;
+        margin: 5px 0;
+    }
+
+    .test2 {
+        color: #fff;
+        text-align: center;
+        line-height: 65px;
+        margin: 5px 0;
+    }
+
+    #profileImg {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin: 5px 0;
+        border-style: solid;
+        border-color: #fff;
+        border-width: 1px;
+    }
+
+    #profileImg2 {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin: 5px 0;
+        border-style: solid;
+        border-color: #fff;
+        border-width: 1px;
+    }
+</style>
+
+
 
 <div class="col-md-12">
 </div>
@@ -49,20 +86,90 @@
         <input type="hidden" id="hfFileId" name="FileId" />
         <input type="submit" id="btnDownload" value="Download" style="display:none" />
     }
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-9">
-                <div class="list-group" style="height: 700px; overflow-y: scroll; width: 1100px">
+                <div class="list-group" >
                     <ul>
                         <h2>Messageboard</h2>
                         @for (int i = 0; i < Model.Messages.Count; i++)
                         {
+
+                            string value = "";
+                            string key = Convert.ToString(@Model.Messages[i].Author);
+                            string imgId = "msgImg" + @Model.Messages[i].Author + i.ToString();
+
+                            <div id="hasImg" style="display: none;">
+                                ja
+                            </div>
+
+                            if (@ViewBag.Images.TryGetValue(key.Trim(), out value))
+                            {
+                                <li class="list-group-item list-group-item-action flex-column align-items-start active">
+                                    <div id="@imgId" style="display: inline-block;">
+                                    </div>
+                                    <div style="display: inline-block;">
+                                        <small class="mb-1">von: @Model.Messages[i].Author</small>
+                                        <br />
+                                        <small>veröffentlicht am: @Model.Messages[i].Date</small>
+                                    </div>
+                                    <hr style="width: 100%; color: white; height: 1px; background-color:white;" />
+                                </li>
+                                <script type="text/javascript">
+                                    document.getElementById("hasImg").innerHTML = "ja";
+                                </script>
+                            }
+                            else
+                            {
+                                <li class="list-group-item list-group-item-action flex-column align-items-start active">
+                                    <div id="@imgId" class="test2" style="display: inline-block;">
+                                    </div>
+                                    <div style="display: inline-block;">
+                                        <small class="mb-1">von: @Model.Messages[i].Author</small>
+                                        <br />
+                                        <small>veröffentlicht am: @Model.Messages[i].Date</small>
+                                    </div>
+                                    <hr style="width: 100%; color: white; height: 1px; background-color:white;" />
+                                </li>
+                                <script type="text/javascript">
+                                    document.getElementById("hasImg").innerHTML = "nein";
+                                </script>
+                            }
+
+                            <script type="text/javascript">
+                                var img = document.getElementById("hasImg").textContent;
+                                if (img.localeCompare("ja") == 0) {
+                                    var member = @Html.Raw(Json.Encode(@Model.Messages[i].Author));
+                                    var id = "msgImg" + member+@i.ToString();
+                                    var divId = "profileImg2";
+                                    var applicationArea = document.getElementById(id);
+
+                                    var newDiv = document.createElement("img");
+                                    newDiv.id = divId;
+                                    newDiv.src = '@value';
+                                    newDiv.class = "profileImg2";
+                                    applicationArea.appendChild(newDiv);
+                                }
+                                else {
+                                    var member = @Html.Raw(Json.Encode(@Model.Messages[i].Author));
+                                    var id = "msgImg" + member+@i.ToString();
+                                    var divId = "profileImage" + member+@i.ToString();
+                                    var applicationArea = document.getElementById(id);
+
+                                    var newDiv = document.createElement("div");
+                                    newDiv.id = divId;
+                                    newDiv.class = 'test';
+                                    applicationArea.appendChild(newDiv);
+
+                                    myfunction2(member, @i);
+                                }
+                            </script>
+
                             <li class="list-group-item list-group-item-action flex-column align-items-start active">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h2 class="mb-1">@Model.Messages[i].Message</h2>
-                                    <small>veröffentlicht am: @Model.Messages[i].Date</small>
                                 </div>
-                                <small class="mb-1">von: @Model.Messages[i].Author</small>
+                                <hr style="width: 100%; color: white; height: 1px; background-color:white;" />
                                 <div class="d-flex w-100 justify-content-between">
                                     <h6 class="mb-1">@Model.Messages[i].FileName</h6>
                                     <small class="mb-1">@Model.Messages[i].FileContentType</small>
@@ -90,7 +197,6 @@
                             }
                             <br />
                             <br />
-
                         }
                     </ul>
                 </div>
@@ -273,6 +379,32 @@
             chatModel.message = $("msg").val();
             chatModel.user = "@User.Identity.Name";
             chatModel.timeStamp = Date.now();
+        }
+        //image preview
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                var file = input.files[0];
+                if (file.type.match('pdf.*') || file.type.match('image.*')) {
+                    $('#noPreview').css('display', 'none')
+                    $('#blah').css('display', 'inline')
+
+                    reader.onload = function (e) {
+                        $('#blah').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                    $('#myModal').css('display', 'inline')
+                }
+                else {
+                    $('#blah').css('display', 'none')
+                    $('#noPreview').css('display', 'inline')
+                }
             }
+        }
+        $("#imgInp").change(function () {
+            readURL(this);
+        });
     </script>
+    <!--BEGIN Frontend default dynamic initials profile picture-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 }
