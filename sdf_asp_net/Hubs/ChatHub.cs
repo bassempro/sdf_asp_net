@@ -19,14 +19,21 @@ namespace sdf_asp_net.Hubs
         public void SendAll(string name, string message)
         {
             Clients.All.addNewMessageToAll(name + " : " + message);
+            Clients.All.isOnline(name + " : " + message);
+        }
+
+        public void SendPrivat(string name,string message,string connectionId)
+        {
+            Clients.Client(connectionId).privatChat(name + ": " + message);
         }
 
         public void SendGroups(string name,string groupName, string message)
         {
+            
             // Call the addNewMessageToPage method to update clients.
             Clients.Group(groupName).addNewMessageToPage(name + ": " + message);
-            
-            
+            //Clients.Client(connectionId).privatChat(name + ": " + message);
+
 
             ChatModel chatModel = new ChatModel()
             {
@@ -54,7 +61,9 @@ namespace sdf_asp_net.Hubs
         public override Task OnConnected()
         {
 
-            Clients.Caller.addNewMessageToPage(" is connected ["+DateTime.Now+"]");
+
+
+            Clients.All.isOnline($"{Context.ConnectionId}");
             return base.OnConnected();
         }
 

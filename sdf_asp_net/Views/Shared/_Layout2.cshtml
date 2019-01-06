@@ -60,23 +60,12 @@
             </div>
 
             <div class="card">
-                <h2>Chat</h2>
-                <label>All</label>
-                <input type="text" id="messageAll" />
-                <input type="button" id="btnSendAll" value="Send to all" />
-                <input type="hidden" id="displayname" />
+                <div class="list-group" id="discussion" style="width: 350px; height: auto; background: lavender;">
+                    <a href="#" class="list-group-item list-group-item-action active">
+                        Online User
+                    </a>
 
-                <label>Group</label>
-                <input type="text" id="messageGroup" />
-                <input type="button" id="btnSendGroup" value="Send to Group" />
-                <input type="hidden" id="displayname" />
-                <br />
-                <p></p>
-                <ul id="discussion"></ul>
-                @*@foreach (var _model in Model)
-                {
-                    <li>gesendet: @_model.user : @_model.message | @_model.dateStamp </li>
-                }*@
+                </div>
             </div>
 
 
@@ -141,7 +130,7 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
-    @section scripts {
+    @*@section scripts {
         <!--Script references. -->
         <!--The jQuery library is required and is referenced by default in _Layout.cshtml. -->
         <!--Reference the SignalR library. -->
@@ -204,7 +193,7 @@
             chatModel.timeStamp = Date.now();
             }
         </script>
-    }
+    }*@
 
 
 </body>
