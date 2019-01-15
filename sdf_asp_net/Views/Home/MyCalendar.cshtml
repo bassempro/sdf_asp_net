@@ -3,8 +3,79 @@
     ViewBag.Title = "MyCalendar";
 }
 
-<h2>Terminkalender</h2>
+<h2>
+    <title>Terminkalender</title>
+    <meta charset="utf-8"/>
+    <link href="/Content/bootstrap.css" rel="stylesheet"/>
+</h2>
 <div id="calender"></div>
+
+<div class="container">
+    <div class="row">
+        <button class="btn btn-primary" data-target="#create" data-toggle="modal">Create Event</button>
+        <div class="modal" id="create" tabindex="-1">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label>Create Event</label>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label>Event ID</label>
+                            <input type="number" placeholder="number" id="eventid"
+                                   style="text-align: center"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Subject</label>
+                            <input type="text" placeholder="text" id="subject"
+                                   style="text-align: center; min-width: 350px"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" placeholder="text" id="description"
+                                   style="text-align: center; min-width: 500px; min-height: 150px"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Start</label>
+                            <input type="date" id="sdate"
+                                   style="text-align: center"/>
+                            <input type="number" placeholder="hh" id="shour"
+                                   style="text-align: center; max-width: 50px"/>
+                            <input type="number" placeholder="mm" id="smin"
+                                   style="text-align: center; max-width: 50px"/>
+                        </div>
+                        <div class="form-group">
+                            <label>End</label>
+                            <input type="date" id="edate"
+                                   style="text-align: center"/>
+                            <input type="number" placeholder="hh" id="ehour"
+                                   style="text-align: center; max-width: 50px"/>
+                            <input type="number" placeholder="mm" id="emin"
+                                   style="text-align: center; max-width: 50px"/>
+                        </div>
+                        <div class="form-group">
+                            <label>Theme color</label>
+                            <input type="color" value="#ff0000" id="color" />
+                        </div>
+                        <div class="form-group">
+                            <label>All day event?</label>
+                            <input type="checkbox" id="allday" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button value="Create" id="fincreate">Create</button>
+                    <button value="Cancel" data-dismiss="modal" id="cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/Scripts/bootstrap.js"></script>
+<script src="/Scripts/jquery-3.3.1.min.js"></script>
+@*
+Break
+*@
 
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -88,4 +159,10 @@
             }
         })
     </script>
+    
+    @*<script>
+        $('#fincreate').on("click"), function() {
+            update($('#create').backgroundColor("#00ff00"));
+        }
+    </script>*@
 }
