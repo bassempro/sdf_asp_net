@@ -21,45 +21,53 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label>Event ID</label>
-                            <input type="number" placeholder="number" id="eventid"
-                                   style="text-align: center"/>
+                            <!--<label>Event ID</label>-->
+                            <input type="number" placeholder="Event ID*" id="eventid" maxlength="10" required
+                                   onchange="if (this.value < 0) this.value = 0;"
+                                   style="text-align: start" />
                         </div>
                         <div class="form-group">
-                            <label>Subject</label>
-                            <input type="text" placeholder="text" id="subject"
-                                   style="text-align: center; min-width: 350px"/>
+                            <!--<label>Subject</label>-->
+                            <input type="text" placeholder="Subject*" id="subject" maxlength="40" required
+                                   style="text-align: start; min-width: 500px" />
                         </div>
                         <div class="form-group">
-                            <label>Description</label>
-                            <input type="text" placeholder="text" id="description"
-                                   style="text-align: center; min-width: 500px; min-height: 150px"/>
+                            <!--<label>Description</label>-->
+                            <textarea placeholder="Description" id="description" maxlength="300"
+                                      style="text-align: start; min-width: 500px; min-height: 200px"></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Start</label>
-                            <input type="date" id="sdate"
-                                   style="text-align: center"/>
-                            <input type="number" placeholder="hh" id="shour"
+                            <label>Start*</label>
+                            <input type="date" id="sdate" required
+                                   style="text-align: center" />
+                            <input type="number" placeholder="hh" id="shour" required
+                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 23) this.value = 23;"
                                    style="text-align: center; max-width: 50px"/>
-                            <input type="number" placeholder="mm" id="smin"
-                                   style="text-align: center; max-width: 50px"/>
+                            <input type="number" placeholder="mm" id="smin" required
+                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 59) this.value = 59;"
+                                   style="text-align: center; max-width: 50px" />
                         </div>
                         <div class="form-group">
                             <label>End</label>
                             <input type="date" id="edate"
-                                   style="text-align: center"/>
+                                   style="text-align: center" />
                             <input type="number" placeholder="hh" id="ehour"
-                                   style="text-align: center; max-width: 50px"/>
+                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 23) this.value = 23;"
+                                   style="text-align: center; max-width: 50px" />
                             <input type="number" placeholder="mm" id="emin"
-                                   style="text-align: center; max-width: 50px"/>
+                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 59) this.value = 59;"
+                                   style="text-align: center; max-width: 50px" />
                         </div>
                         <div class="form-group">
                             <label>Theme color</label>
                             <input type="color" value="#ff0000" id="color" />
                         </div>
                         <div class="form-group">
-                            <label>All day event?</label>
-                            <input type="checkbox" id="allday" />
+                            <label>All day event?*</label>
+                            <input type="checkbox" id="allday" required />
+                        </div>
+                        <div class="form-group">
+                            <label>* = Pflichtfelder</label>
                         </div>
                     </form>
                 </div>
@@ -73,9 +81,6 @@
 </div>
 <script src="/Scripts/bootstrap.js"></script>
 <script src="/Scripts/jquery-3.3.1.min.js"></script>
-@*
-Break
-*@
 
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -159,10 +164,4 @@ Break
             }
         })
     </script>
-    
-    @*<script>
-        $('#fincreate').on("click"), function() {
-            update($('#create').backgroundColor("#00ff00"));
-        }
-    </script>*@
 }
