@@ -1,0 +1,167 @@
+﻿
+@{
+    ViewBag.Title = "MyCalendar";
+}
+
+<h2>
+    <title>Terminkalender</title>
+    <meta charset="utf-8"/>
+    <link href="/Content/bootstrap.css" rel="stylesheet"/>
+</h2>
+<div id="calender"></div>
+
+<div class="container">
+    <div class="row">
+        <button class="btn btn-primary" data-target="#create" data-toggle="modal">Create Event</button>
+        <div class="modal" id="create" tabindex="-1">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <label>Create Event</label>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <!--<label>Event ID</label>-->
+                            <input type="number" placeholder="Event ID*" id="eventid" maxlength="10" required
+                                   onchange="if (this.value < 0) this.value = 0;"
+                                   style="text-align: start" />
+                        </div>
+                        <div class="form-group">
+                            <!--<label>Subject</label>-->
+                            <input type="text" placeholder="Subject*" id="subject" maxlength="40" required
+                                   style="text-align: start; min-width: 500px" />
+                        </div>
+                        <div class="form-group">
+                            <!--<label>Description</label>-->
+                            <textarea placeholder="Description" id="description" maxlength="300"
+                                      style="text-align: start; min-width: 500px; min-height: 200px"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Start*</label>
+                            <input type="date" id="sdate" required
+                                   style="text-align: center" />
+                            <input type="number" placeholder="hh" id="shour" required
+                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 23) this.value = 23;"
+                                   style="text-align: center; max-width: 50px"/>
+                            <input type="number" placeholder="mm" id="smin" required
+                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 59) this.value = 59;"
+                                   style="text-align: center; max-width: 50px" />
+                        </div>
+                        <div class="form-group">
+                            <label>End</label>
+                            <input type="date" id="edate"
+                                   style="text-align: center" />
+                            <input type="number" placeholder="hh" id="ehour"
+                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 23) this.value = 23;"
+                                   style="text-align: center; max-width: 50px" />
+                            <input type="number" placeholder="mm" id="emin"
+                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 59) this.value = 59;"
+                                   style="text-align: center; max-width: 50px" />
+                        </div>
+                        <div class="form-group">
+                            <label>Theme color</label>
+                            <input type="color" value="#ff0000" id="color" />
+                        </div>
+                        <div class="form-group">
+                            <label>All day event?*</label>
+                            <input type="checkbox" id="allday" required />
+                        </div>
+                        <div class="form-group">
+                            <label>* = Pflichtfelder</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button value="Create" id="fincreate">Create</button>
+                    <button value="Cancel" data-dismiss="modal" id="cancel">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/Scripts/bootstrap.js"></script>
+<script src="/Scripts/jquery-3.3.1.min.js"></script>
+
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span id="eventTitle"></span></h4>
+            </div>
+            <div class="modal-body">
+                <p id="pDetails"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var events = [];
+            $.ajax({
+                type: "GET",
+                url: "/home/GetEvents",
+                success: function(data) {
+                    $.each(data,
+                        function(i, v) {
+                            events.push({
+                                title: v.Subject,
+                                description: v.Description,
+                                start: moment(v.Start),
+                                end: v.End != null ? moment(v.End) : null,
+                                color: v.ThemeColor,
+                                allDay: v.IsFullDay
+                            });
+                        })
+
+                    GenerateCalender(events);
+                },
+                error: function(error) {
+                    alert('failed');
+                }
+            })
+
+            function GenerateCalender(events) {
+                $('#calender').fullCalendar('destroy');
+                $('#calender').fullCalendar({
+                    contentHeight: 400,
+                    defaultDate: new Date(),
+                    timeFormat: 'h(:mm)a',
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,basicWeek,basicDay,agenda'
+                    },
+                    eventLimit: true,
+                    eventColor: '#378006',
+                    events: events,
+                    eventClick: function(calEvent, jsEvent, view) {
+                        $('#myModal #eventTitle').text(calEvent.title);
+                        var $description = $('<div/>');
+                        $description.append($('<p/>')
+                            .html('<b>Start:</b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
+                        if (calEvent.end != null) {
+                            $description.append($('<p/>')
+                                .html('<b>End:</b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+                        }
+                        $description.append($('<p/>').html('<b>Description:</b>' + calEvent.description));
+                        $('#myModal #pDetails').empty().html($description);
+
+                        $('#myModal').modal();
+                    }
+                })
+            }
+        })
+    </script>
+}
