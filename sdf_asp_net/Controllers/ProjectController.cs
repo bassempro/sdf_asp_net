@@ -300,6 +300,28 @@ namespace sdf_asp_net.Controllers
                         sqlCmd.Parameters.AddWithValue("@ProjectId", createdProjectId);
                         sqlCmd.ExecuteNonQuery();
                     }
+
+                    for (int i = 0; i < usersToAdd.Count; i++)
+                    {
+                        System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
+                            new System.Net.Mail.MailAddress("sdf.asp.donet@gmail.com", "Projekteinladung"),
+                            new System.Net.Mail.MailAddress(usersToAdd[i]));
+                        m.Subject = name;
+                        m.Body = string.Format("Dear {0}, Sie wurden zu dem Projekt " + name + " eingeladen. Unter dieser Addresse: " + HttpContext.Request.Url.Authority + "/Project/DetailView/" + Convert.ToInt32(dtblProject.Rows[0][0].ToString()) + " können sie das Projekt einsehen",
+                         usersToAdd[i], Request.Url.Scheme);
+                        m.IsBodyHtml = true;
+                        System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.gmail.com");
+                        smtp.Credentials = new System.Net.NetworkCredential("sdf.asp.donet@gmail.com", "test-123123");
+                        m.IsBodyHtml = true;
+                        // smtp.ServerCertificateValidationCallback = () => true;
+                        smtp.Port = 587;
+                        smtp.EnableSsl = true;
+                        System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient();
+                        client.EnableSsl = true;
+                        smtp.Send(m);
+                    }
+
+
                 }
 
             }
@@ -380,6 +402,23 @@ namespace sdf_asp_net.Controllers
                     sqlCmd.Parameters.AddWithValue("@Name", usersToAdd[i]);
                     sqlCmd.Parameters.AddWithValue("@ProjectId", projectViewModel.Id);
                     sqlCmd.ExecuteNonQuery();
+                    System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
+                        new System.Net.Mail.MailAddress("sdf.asp.donet@gmail.com", "Projekteinladung"),
+                        new System.Net.Mail.MailAddress(usersToAdd[i]));
+                    m.Subject = projectViewModel.Name;
+         
+                    m.Body = string.Format("Dear {0}, Sie wurden zu dem Projekt " + projectViewModel.Name + " eingeladen. Unter dieser Addresse: http://"+ HttpContext.Request.Url.Authority + "/Project/DetailView/" + projectViewModel.Id.ToString() + " können sie das Projekt einsehen",
+                         usersToAdd[i], Request.Url.Scheme);
+                    m.IsBodyHtml = true;
+                    System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.gmail.com");
+                    smtp.Credentials = new System.Net.NetworkCredential("sdf.asp.donet@gmail.com", "test-123123");
+                    m.IsBodyHtml = true;
+                    // smtp.ServerCertificateValidationCallback = () => true;
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient();
+                    client.EnableSsl = true;
+                    smtp.Send(m);
                 }
 
 
