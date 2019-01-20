@@ -12,7 +12,8 @@
 
 <div class="container">
     <div class="row">
-        <button class="btn btn-primary" data-target="#create" data-toggle="modal">Create Event</button>
+        <button class="btn btn-primary" data-target="#create" data-toggle="modal"
+                style="font-variant-caps: all-small-caps">Create Event</button>
         <div class="modal" id="create" tabindex="-1">
             <div class="modal-content">
                 <div class="modal-header">
@@ -20,60 +21,53 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <div class="form-group">
-                            <!--<label>Event ID</label>-->
-                            <input type="number" placeholder="Event ID*" id="eventid" maxlength="10" required
-                                   onchange="if (this.value < 0) this.value = 0;"
-                                   style="text-align: start" />
-                        </div>
-                        <div class="form-group">
-                            <!--<label>Subject</label>-->
-                            <input type="text" placeholder="Subject*" id="subject" maxlength="40" required
-                                   style="text-align: start; min-width: 500px" />
-                        </div>
-                        <div class="form-group">
-                            <!--<label>Description</label>-->
-                            <textarea placeholder="Description" id="description" maxlength="300"
-                                      style="text-align: start; min-width: 500px; min-height: 200px"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Start*</label>
-                            <input type="date" id="sdate" required
-                                   style="text-align: center" />
-                            <input type="number" placeholder="hh" id="shour" required
-                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 23) this.value = 23;"
-                                   style="text-align: center; max-width: 50px"/>
-                            <input type="number" placeholder="mm" id="smin" required
-                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 59) this.value = 59;"
-                                   style="text-align: center; max-width: 50px" />
-                        </div>
-                        <div class="form-group">
-                            <label>End</label>
-                            <input type="date" id="edate"
-                                   style="text-align: center" />
-                            <input type="number" placeholder="hh" id="ehour"
-                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 23) this.value = 23;"
-                                   style="text-align: center; max-width: 50px" />
-                            <input type="number" placeholder="mm" id="emin"
-                                   onchange="if (this.value < 0) this.value = 0; if (this.value > 59) this.value = 59;"
-                                   style="text-align: center; max-width: 50px" />
-                        </div>
-                        <div class="form-group">
-                            <label>Theme color</label>
-                            <input type="color" value="#ff0000" id="color" />
-                        </div>
-                        <div class="form-group">
-                            <label>All day event?*</label>
-                            <input type="checkbox" id="allday" required />
-                        </div>
-                        <div class="form-group">
-                            <label>* = Pflichtfelder</label>
+                        <div id="elements">
+                            <div class="form-group">
+                                <!--<label>Subject</label>-->
+                                <input type="text" placeholder="Subject*" id="subject" maxlength="40" required
+                                       style="text-align: start; min-width: 500px" />
+                            </div>
+                            <div class="form-group">
+                                <!--<label>Description</label>-->
+                                <textarea placeholder="Description" id="description" maxlength="300"
+                                          style="text-align: start; min-width: 500px; min-height: 200px"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Start*</label>
+                                <input type="date" id="sdate" required
+                                       style="text-align: center" />
+                                <input type="time" id="stime" required
+                                       style="text-align: center" />
+                            </div>
+                            <div class="form-group">
+                                <label>End</label>
+                                <input type="date" id="edate"
+                                       style="text-align: center" />
+                                <input type="time" id="etime"
+                                       style="text-align: center" />
+                            </div>
+                            @*<div class="form-group">
+                                <label>Theme color</label>
+                                <input type="color" value="#ff0000" maxlength="10" id="color" />
+                            </div>*@
+                            <div class="form-group">
+                                <label>All day event?</label>
+                                <input type="checkbox" id="allday" />
+                            </div>
+                            <div class="form-group">
+                                <label>* = Pflichtfelder</label>
+                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button value="Create" id="fincreate">Create</button>
-                    <button value="Cancel" data-dismiss="modal" id="cancel">Cancel</button>
+                    <button value="Cancel" data-dismiss="modal" id="cancel" onclick="function() {
+                        $('#elements input[type=text]').val('');
+                        $('#elements input[type=time]').val('');
+                        $('#elements input[type=date]').val('');
+                        $('#elements input[type=checkbox]').val('');
+                        $('#description').val('');}">Cancel</button>
                 </div>
             </div>
         </div>
@@ -130,7 +124,38 @@
                 error: function(error) {
                     alert('failed');
                 }
-            })
+            });
+
+            $("#fincreate").click(function() {
+
+                var start = $("#sdate").val() + " " + $("#stime").val();
+                var end = null;
+                if ($("#edate").val() != null) {
+                    end = $("#edate").val() + " " + $("#etime").val();
+                }
+                
+                var event = {};
+                event.subject = $("#subject").val();
+                event.description = $("#description").val();
+                event.start = start;
+                event.end = end;
+                //event.color = $("#color").val();
+                event.allday = $("#allday").val();
+
+                $.ajax({
+                    url: "/home/AddEvents",
+                    method: "post",
+                    data: event,
+                    success: function() {
+                        events.push(event);
+                        GenerateCalender(events);
+                        $("#cancel").click();
+                    },
+                    error: function() {
+                        alert('add failed');
+                    }
+                });
+            });
 
             function GenerateCalender(events) {
                 $('#calender').fullCalendar('destroy');
@@ -144,7 +169,7 @@
                         right: 'month,basicWeek,basicDay,agenda'
                     },
                     eventLimit: true,
-                    eventColor: '#378006',
+                    eventColor: '#32bfff',
                     events: events,
                     eventClick: function(calEvent, jsEvent, view) {
                         $('#myModal #eventTitle').text(calEvent.title);

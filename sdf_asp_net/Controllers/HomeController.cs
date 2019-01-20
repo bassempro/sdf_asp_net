@@ -1,6 +1,8 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -34,12 +36,27 @@ namespace sdf_asp_net.Controllers
 
             return View();
         }
+
         public JsonResult GetEvents()
         {
             using (MyCalendarEntities dc = new MyCalendarEntities())
             {
                 var events = dc.Events.ToList();
-                return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                return new JsonResult {Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet};
+            }
+        }
+
+        public void AddEvents(Event e)
+        {
+            using (MyCalendarEntities dc = new MyCalendarEntities())
+            {
+                e.EventID = dc.Events.Count() +1 ;
+
+                dc.Events.Add(e);
+                dc.SaveChanges();
+
+                //var events = dc.Events.ToList();
+                //return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
         }
     }
