@@ -26,14 +26,14 @@
                 <li class="nav-item">
                     <a class="nav-link" href="@Url.Action("Index", "Project")">Startseite</a>
                 </li>
-                <li class="nav-item">
+                @*<li class="nav-item">
                     <a class="nav-link" href="@Url.Action("About", "Home")">Info</a>
-                </li>
+                </li>*@
                 <li class="nav-item">
                     <a class="nav-link" href="@Url.Action("Contact", "Home")">Kontakt</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("MyCalendar", "Home")">MyCalendar</a>
+                    <a class="nav-link" href="@Url.Action("MyCalendar", "Home")">Terminkalender</a>
                 </li>
                 @Html.Partial("_LoginPartial")
             </ul>
@@ -41,13 +41,13 @@
     </nav>
 
 
-    <div class="row">
-        <div class="leftcolumn">
+    @*<div class="row">
+        <div class="leftcolumn">*@
             <div class="card">
                 @RenderBody()
             </div>
-        </div>
-        <div class="rightcolumn">
+        @*</div>*@
+        @*<div class="rightcolumn">
             <div class="card">
                 <h2>Placeholder</h2>
                 <div class="fakeimg" style="height:100px;">Image</div>
@@ -61,12 +61,12 @@
             <div class="card">
                 <p>Placeholder</p>
             </div>
-        </div>
-    </div>
+        </div>*@
+    @*</div>*@
 
-    <div class="footer">
+    @*<div class="footer">
         <h2>Footer</h2>
-    </div>
+    </div>*@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

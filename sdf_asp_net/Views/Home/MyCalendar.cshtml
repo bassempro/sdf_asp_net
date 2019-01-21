@@ -20,7 +20,7 @@
                     <label>Create Event</label>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="diaform">
                         <div id="elements">
                             <div class="form-group">
                                 <!--<label>Subject</label>-->
@@ -50,10 +50,10 @@
                                 <label>Theme color</label>
                                 <input type="color" value="#ff0000" maxlength="10" id="color" />
                             </div>*@
-                            <div class="form-group">
+                            @*<div class="form-group">
                                 <label>All day event?</label>
                                 <input type="checkbox" id="allday" />
-                            </div>
+                            </div>*@
                             <div class="form-group">
                                 <label>* = Pflichtfelder</label>
                             </div>
@@ -62,12 +62,7 @@
                 </div>
                 <div class="modal-footer">
                     <button value="Create" id="fincreate">Create</button>
-                    <button value="Cancel" data-dismiss="modal" id="cancel" onclick="function() {
-                        $('#elements input[type=text]').val('');
-                        $('#elements input[type=time]').val('');
-                        $('#elements input[type=date]').val('');
-                        $('#elements input[type=checkbox]').val('');
-                        $('#description').val('');}">Cancel</button>
+                    <button value="Cancel" data-dismiss="modal" id="cancel" onclick="document.location.reload(true)">Cancel</button>
                 </div>
             </div>
         </div>
@@ -128,7 +123,9 @@
 
             $("#fincreate").click(function() {
 
-                var start = $("#sdate").val() + " " + $("#stime").val();
+                var startdate = $("#sdate").val();
+                var starttime = $("#stime").val();
+                var start = startdate + " " + starttime;
                 var end = null;
                 if ($("#edate").val() != null) {
                     end = $("#edate").val() + " " + $("#etime").val();
@@ -140,7 +137,17 @@
                 event.start = start;
                 event.end = end;
                 //event.color = $("#color").val();
-                event.allday = $("#allday").val();
+                //event.allday = $("#allday").val();
+                event.allday = false;
+
+                if ((event.subject == "") ||
+                    (startdate == "") ||
+                    (starttime == "")) {
+                    alert("Please fill in all required fields!");
+                    //$("#fincreate").prop("disabled", true);
+                    //$("#diaform").validate().element("#fincreate");
+                    return;
+                }
 
                 $.ajax({
                     url: "/home/AddEvents",
@@ -149,7 +156,10 @@
                     success: function() {
                         events.push(event);
                         GenerateCalender(events);
-                        $("#cancel").click();
+                        //$("#cancel").click();
+                        $("#diaform").trigger("reset");
+                        $("#create").modal("hide");
+                        document.location.reload();
                     },
                     error: function() {
                         alert('add failed');
