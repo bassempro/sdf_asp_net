@@ -51,12 +51,8 @@ namespace sdf_asp_net.Controllers
             using (MyCalendarEntities dc = new MyCalendarEntities())
             {
                 e.EventID = dc.Events.Count() +1 ;
-
                 dc.Events.Add(e);
                 dc.SaveChanges();
-
-                //var events = dc.Events.ToList();
-                //return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             }
         }
     }
