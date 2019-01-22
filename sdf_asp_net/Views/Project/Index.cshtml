@@ -3,6 +3,8 @@
 
     ViewBag.Title = "Projekte";
 }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
     #header {
@@ -13,13 +15,13 @@
         font-size: 24px;
     }
 
-   
 
-        .submitButton:hover {
-            background-color: #e1e1e1;
-        }
 
- 
+    .submitButton:hover {
+        background-color: #e1e1e1;
+    }
+
+
 
     
 
@@ -34,8 +36,6 @@
             font-size: 16px;
             font-weight: bold;
             padding: 8px;
-        
-            
         }
 
         .chatRoom .content {
@@ -47,7 +47,6 @@
                 float: left;
                 width: 859px;
                 height: 300px;
-               
                 overflow-y: scroll;
             }
 
@@ -69,18 +68,17 @@
                     display: block;
                     cursor: pointer;
                     padding: 4px;
-                    
                     border-bottom: solid 1px;
+                    border:groove;
                 }
 
                 .chatRoom .content .users .loginUser {
                     display: block;
                     padding: 4px;
-                   
                     border-bottom: solid 1px;
                 }
 
-                
+
 
         .chatRoom .messageBar {
             border-top: solid 1px;
@@ -109,7 +107,6 @@
         .draggable .header {
             cursor: move;
             border-bottom: solid 1px;
-            
         }
 
         .draggable .selText {
@@ -141,36 +138,140 @@
                 margin-left: 4px;
                 width: 55px;
             }
+
+    .tata {
+        display: none
+           
+    }
+    .tata2 {
+        display: none
+    }
+
+    .emoticon {
+        background-color: dodgerblue;
+        width: 60px;
+        height: 37px;
+    }
+    .divContainer{
+        resize:vertical;    
+    }
+  
 </style>
 <div class="col-md-12">
     <a href="@Url.Action("Create", "Project")" class="btn btn-primary float-right btn-lg active" role="button" aria-pressed="true">Projekt erstellen</a>
+
     <input id="btnStartChat" type="button" class="submitButton btn btn-primary float-lg-right btn-lg active" value="Start Chat" aria-pressed="true" />
 </div>
 
 <h2>Projekte</h2>
 
 <hr />
-<div>
 
-    <div id="divContainer">
-        
 
-        <div id="divChat" class="chatRoom">
-            <div class="title">
-              Willkommen im Chat: [<span id='spanUser'></span>]
+<div id="divContainer">
 
+
+    <div id="divChat" class="chatRoom" style="background-color:antiquewhite;">
+        <div class="title" style="background-color:greenyellow;">
+            Willkommen im Chat: [<span id='spanUser' style="color:brown;"></span>]
+      
+             <h5 id="spanUser2" style="color:blue; float:right;">Online Users</h5>
+        </div>
+        <div class="content">
+            <div id="divChatWindow" class="chatWindow">
+               
             </div>
-            <div class="content">
-                <div id="divChatWindow" class="chatWindow">
-                </div>
-                <div id="divusers" class="users">
-                </div>
-            </div>
-            <div class="messageBar">
-                <input class="textbox" type="text" id="txtMessage" />
-                <input id="btnSendMsg" type="button" value="Send" class="submitButton  btn btn-primary btn-lg active" />
+            <div id="divusers" class="users" >
+         
             </div>
         </div>
+        <div class="messageBar">
+            <input class="textbox" type="text" id="txtMessage" style="width:700px;" />
+            <input id="btnSendMsg" type="button" value="Send" class="submitButton  btn btn-primary btn-lg active" /><button type="button" class="emoticon" id="c">&#x1F600</button>
+           <div>
+            <p id="emoji"></p>
+
+            <table id="theTable" border="1" align="center" class="tata" cols="3">
+
+                <tr>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F600</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F617</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F61B</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F60D</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F618</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F617</td>
+                </tr>
+                <tr>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F611</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F62C</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F62F</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F911</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F917</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F92D</td>
+                </tr>
+                <tr>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F606</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F605</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F602</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F92B</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F914</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F910</td>
+                </tr>
+
+            </table>
+
+               </div>
+
+        </div>
+
+
+
+
+
+        <script>
+            
+             
+            var wich = "";
+
+                $("#c").click(function (event) {
+                    $(":hidden").css("visibility", "visible");
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                    }
+                    else
+
+                        $('#theTable').show();
+
+                });
+                $("#td1,#td2,#td3,#td4,#td5,#td6").click(function (event) {
+
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                    }
+
+
+            });
+            function content(elem) {
+
+                var p = document.getElementById("emoji");
+                p.emo = '' + elem.innerText;
+                var p = document.getElementById("emoji");
+
+                var txt = document.getElementById(wich).value;
+                txt = txt + p.emo;
+                document.getElementById(wich).value = txt;
+
+
+
+
+
+            }
+
+
+        </script>
+
 
         <input id="hdId" type="hidden" />
         <input id="hdUserName" type="hidden" />
@@ -268,7 +369,7 @@
                     chatHub.server.connect(name);
                 }
                 else {
-                   
+
                 }
 
             });
@@ -281,6 +382,7 @@
 
                     var userName = $('#hdUserName').val();
                     chatHub.server.sendMessageToAll(userName, msg);
+                    $("#msg").css("background-color","#78e08f")
                     $("#txtMessage").val('');
                 }
             });
@@ -386,12 +488,12 @@
 
             if (userId == id) {
 
-                code = $('<div class="loginUser">' + name + "</div>");
+                code = $('<div class="loginUser" style="background-color:gold;">' + name + "</div>");
 
             }
             else {
 
-                code = $('<a id="' + id + '" class="user" >' + name + '<a>');
+                code = $('<a id="' + id + '" class="user" style="background-color:gold;" >' + name + '<a>');
 
                 $(code).dblclick(function () {
 
@@ -427,21 +529,121 @@
         function createPrivateChatWindow(chatHub, userId, ctrId, userName) {
 
             var div = '<div id="' + ctrId + '" class="ui-widget-content draggable" rel="0">' +
-                '<div class="header">' +
+                '<div class="header" style="background-color:green;">' +
                 '<div  style="float:right;">' +
-                '<img id="imgDelete"  style="cursor:pointer;" src="/Images/delete.png"/>' +
+                '<h8 id="imgDelete"  style="cursor:pointer; float:right;">&#x274C"</h8> '+
                 '</div>' +
 
-                '<span class="selText" rel="0">' + userName + '</span>' +
+                '<span class="selText" style="color:yellow;" rel="0">' + userName + '</span>' +
                 '</div>' +
-                '<div id="divMessage" class="messageArea">' +
+                '<div id="divMessage" class="messageArea" style="background-color:antiquewhite;">' +
 
                 '</div>' +
-                '<div class="buttonBar">' +
+                '<div class="buttonBar" style="background-color:green;  ">' +
                 '<input id="txtPrivateMessage" class="msgText" type="text"   />' +
-                '<input id="btnSendMessage" class="submitButton button" type="button" value="Send"   />' +
+                '<input id="btnSendMessage" class="submitButton  btn btn-primary btn-lg active" type="button" style=""value="Send"   />' +'<button type="button" class="emoticon" id="wow">&#x1F600</button>' +
+
+            
+
+              ' </div >'
+
+
+                +
                 '</div>' +
-                '</div>';
+                '   <div>' +
+              
+                +
+                '</div>' +
+                
+                
+                '<p id = "emoji"/>' +
+
+                ' <table id="theTable3" border="1" align="center" class="tata2" cols="3">' +
+
+                '  <tr>' +
+                '<td type="button" id="u" onclick="content(this)">&#x1F600</td>' +
+                ' <td type="button" id="u" onclick="content(this)">&#x1F617</td>' +
+                '<td type="button" id="u" onclick="content(this)">&#x1F61B</td>' +
+                ' <td type="button" id="u" onclick="content(this)">&#x1F60D</td>' +
+                ' <td type="button" id="u" onclick="content(this)">&#x1F618</td>' +
+                '<td type="button" id="u" onclick="content(this)">&#x1F617</td>' +
+                ' </tr>' +
+                ' <tr>' +
+                ' <td type="button" id="i" onclick="content(this)">&#x1F611</td>' +
+                ' <td type="button" id="i" onclick="content(this)">&#x1F62C</td>' +
+                '<td type="button" id="i" onclick="content(this)">&#x1F62F</td>' +
+                '<td type="button" id="i" onclick="content(this)">&#x1F911</td>' +
+                ' <td type="button" id="i" onclick="content(this)">&#x1F917</td>' +
+                '   <td type="button" id="i" onclick="content(this)">&#x1F92D</td> ' +
+                '   </tr> ' +
+                '<tr>' +
+                ' <td type="button" id="o" onclick="content(this)">&#x1F606</td>' +
+                ' <td type="button" id="o" onclick="content(this)">&#x1F605</td>' +
+                ' <td type="button" id="o" onclick="content(this)">&#x1F602</td>' +
+                '<td type="button" id="o" onclick="content(this)">&#x1F92B</td>' +
+                '<td type="button" id="o" onclick="content(this)">&#x1F914</td>' +
+                ' <td type="button" id="o" onclick="content(this)">&#x1F910</td>' +
+                ' </tr>' +
+
+                '  </table>' 
+                ;
+
+            $(document).ready(function () {
+               
+                $("#u,#i,#o").click(function (event) {
+
+                 
+                    if ($('#theTable3').is(":visible")) {
+
+                        $('#theTable3').hide();
+                    }
+                    else
+                        $('#theTable3').show();
+
+
+                });
+
+            });
+          
+            $(document).ready(function () {
+            $("#wow").click(function () {
+                wich = "txtPrivateMessage";
+           
+
+                });
+            });
+          
+
+
+
+
+
+            $(document).ready(function () {
+            $("#c").click(function () {
+                wich = "txtMessage";
+                
+            });
+            });
+
+         
+          
+            $(document).ready(function () {
+                $("#wow").click(function () {
+                    $(":hidden").css("visibility", "visible");
+                    if ($('#theTable3').is(":visible")) {
+
+                        $('#theTable3').hide();
+                    }
+                    else
+
+                        $('#theTable3').show();
+
+                
+          
+                });
+            });
+
+
 
             var $div = $(div);
 

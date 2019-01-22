@@ -1,79 +1,228 @@
 ﻿@model sdf_asp_net.ViewModels.ProjectViewModel
 
-
-
-@{
-    Layout = "~/Views/Shared/_Layout2.cshtml";
-    ViewBag.Title = "DetailView";
-}
-<style>
-    .test {
-        color: #fff;
-        text-align: center;
-        line-height: 45px;
-        margin: 5px 0;
+<aside>
+    @{
+        Layout = "~/Views/Shared/_Layout2.cshtml";
+        ViewBag.Title = "DetailView";
     }
 
-    .test2 {
-        color: #fff;
-        text-align: center;
-        line-height: 65px;
-        margin: 5px 0;
-    }
+</aside>
+<section class="set">
+    <style>
+        .test {
+            color: #fff;
+            text-align: center;
+            line-height: 45px;
+            margin: 5px 0;
+        }
 
-    #profileImg {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin: 5px 0;
-        border-style: solid;
-        border-color: #fff;
-        border-width: 1px;
-    }
+        .test2 {
+            color: #fff;
+            text-align: center;
+            line-height: 65px;
+            margin: 5px 0;
+        }
 
-    #profileImg2 {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        margin: 5px 0;
-        border-style: solid;
-        border-color: #fff;
-        border-width: 1px;
-    }
-</style>
+        #profileImg {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 5px 0;
+            border-style: solid;
+            border-color: #fff;
+            border-width: 1px;
+        }
 
-
-
-<div class="col-md-12">
-</div>
-<div>
-
-    <div class="jumbotron">
-        <h1 class="display-4">Projekt: @Html.DisplayFor(model => model.Name)</h1>
-        <p class="lead">Beschreibung: @Html.DisplayFor(model => model.Description)</p>
-        <hr class="my-4">
-        <p>Projektleiter: @Html.DisplayFor(model => model.ManagerName) </p>
-
-        <div>
-
-            <h3>Chat</h3>
-
-            <textarea style="resize: none;" id="text" name="text" cols="70" rows="8"></textarea>
-            <textarea style="resize: none;" id="user" name="text" cols="50" rows="8"></textarea>
+        #profileImg2 {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 5px 0;
+            border-style: solid;
+            border-color: #fff;
+            border-width: 1px;
+        }
+        .set{
+            text-align:left;    
+        }
+        .tata {
+            display: none;
+        }
 
 
+        .emoticon {
+            background-color: dodgerblue;
+            width: 60px;
+            height: 37px;
+        }
+    </style>
 
-            <br />
-            <input type="text" id="messageGroup" />
 
-            <input type="button" id="btnSendGroup" value="Send" />
-            <input type="button" id="btnPrivat" value="Send" />
-            <input type="text" id="privat" />
-            <br />
+
+    <div class="col-md-12">
+        <div class="jumbotron">
+            <h1 class="display-4">Projekt: @Html.DisplayFor(model => model.Name)</h1>
+            <p class="lead">Beschreibung: @Html.DisplayFor(model => model.Description)</p>
+            <hr class="my-4">
+            <p>Projektleiter: @Html.DisplayFor(model => model.ManagerName) </p>
+
+            <div class="area">
+
+                <h3>Chat</h3>
+
+                <textarea style="resize: none;" id="text" name="text" cols="70" rows="8"></textarea>
+                <textarea style="resize: none;" id="user" name="text" cols="50" rows="8"></textarea>
+
+
+
+                <br />
+                <input type="text" id="messageGroup" />
+
+                <input type="button" id="btnSendGroup" value="Send" /><button type="button" class="emoticon" id="c">&#x1F600</button>
+
+                <input type="text" id="privat" />
+                <input type="button" id="btnPrivat" value="Send" /><button type="button" class="emoticon" id="bt1">&#x1F600</button>
+
+
+                <br />
+
+                <p id="emoji"></p>
+
+                <table id="theTable" border="1" class="tata" cols="3">
+
+                    <tr>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F600</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F617</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F61B</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F60D</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F618</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F617</td>
+                    </tr>
+                    <tr>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F611</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F62C</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F62F</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F911</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F917</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F92D</td>
+                    </tr>
+                    <tr>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F606</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F605</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F602</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F92B</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F914</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F910</td>
+                    </tr>
+
+                </table>
+
+
+
+
+            </div>
+
+
+
+
+
+            <script>
+
+
+                $("#bt1").click(function (event) {
+                    $(":hidden").css("visibility", "visible");
+                    $('#theTable').attr('align', 'center');
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                        $('#theTable').attr('align', 'center');
+                    }
+                    else
+
+                        $('#theTable').show();
+
+                });
+
+                $("#c").click(function (event) {
+                    $(":hidden").css("visibility", "visible");
+                    $('#theTable').attr('align', 'left');
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                        $('#theTable').attr('align', 'left');
+                    }
+                    else
+
+                        $('#theTable').show();
+
+                });
+
+
+                $("#td1,#td2,#td3,#td4,#td5,#td6").click(function (event) {
+
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                    }
+
+
+                });
+
+                var api_key = "";
+                $("#bt1").click(function () {
+                    api_key = "privat";
+
+                });
+                $("#c").click(function () {
+                    api_key = "messageGroup";
+
+                });
+
+
+                function content(elem) {
+
+                    var p = document.getElementById("emoji");
+                    p.emo = '' + elem.innerText;
+                    var p = document.getElementById("emoji");
+
+                    var txt = document.getElementById(api_key).value;
+                    txt = txt + p.emo;
+                    document.getElementById(api_key).value = txt;
+
+
+
+
+
+                }
+
+                $("#td1,#td2,#td3,#td4,#td5,#td6").click(function (event) {
+
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                    }
+
+
+                });
+
+
+
+
+
+
+
+
+
+
+
+            </script>
 
 
         </div>
     </div>
+
+
+
 
 
 
@@ -108,7 +257,7 @@
                                 <li class="list-group-item list-group-item-action flex-column align-items-start active">
                                     <div id="@imgId" style="display: inline-block;">
                                     </div>
-                                    <div style="display: inline-block;">
+                                    <div style="display: inline-block;" >
                                         <small class="mb-1">von: @Model.Messages[i].Author</small>
                                         <br />
                                         <small>veröffentlicht am: @Model.Messages[i].Date</small>
@@ -187,7 +336,7 @@
                                     <input type="hidden" name="messageboardId" class="form-control" value="@Model.Messages[i].Id" aria-label="Message" aria-describedby="button-addon4">
                                     <div class="input-group-append" id="button-addon4">
                                         <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Antwort" aria-label="Message" aria-describedby="button-addon4">
-                                        <input type="submit" id="btnUpload" value=">" class="btn btn-primary" />
+                                        <input type="submit" id="btnUpload" value="Senden" class="btn btn-primary" />
                                     </div>
                                 }
                             }
@@ -241,59 +390,59 @@
                             </div>
                         </div>
 
-                        <input type="submit" id="btnUpload" value=">" class="btn btn-primary" />
+                        <input type="submit" id="btnUpload" value="upload" class="btn btn-primary" />
                     </div>
                 </div>
             }
         }
     }
-</div>
-<br />
 
-<p>
-    <a href="@Url.Action("Index", "Project")" class="btn btn-success float-right btn-lg" role="button" aria-pressed="true">Zurück zu der Projektliste</a>
-    @if (@ViewBag.IsAuthorized != null && userName != null)
-    {
-        if (userName.ToString().Contains(@ViewBag.IsAuthorized))
+    <br />
+
+    <p>
+        <a href="@Url.Action("Index", "Project")" class="btn btn-success float-right btn-lg" role="button" aria-pressed="true">Zurück zu der Projektliste</a>
+        @if (@ViewBag.IsAuthorized != null && userName != null)
         {
-            <a href="@Url.Action("Edit", "Project", new { id = Model.Id })" class="btn btn-primary float-right btn-lg" role="button" aria-pressed="true">Bearbeiten</a>
+            if (userName.ToString().Contains(@ViewBag.IsAuthorized))
+            {
+                <a href="@Url.Action("Edit", "Project", new { id = Model.Id })" class="btn btn-primary float-right btn-lg" role="button" aria-pressed="true">Bearbeiten</a>
+            }
         }
-    }
-</p>
+    </p>
 
-<hr>
-@for (int i = 0; i < Model.Messages.Count; i++)
-{
-    <div class="modal fade" id="reply@(i)" tabindex="-1" role="dialog" aria-labelledby="userListeModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="userListeModalLabel">Nachrichtenverlauf</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <ul class="list-group">
-                        @for (int j = 0; j < Model.Messages[i].MessageReplies.Count; j++)
-                        {
-                            <li>
-                                @Model.Messages[i].MessageReplies[j].Author schrieb am @Model.Messages[i].MessageReplies[j].Date.ToString()
-                                : @Model.Messages[i].MessageReplies[j].Message
-                            </li>
-                        }
+    <hr>
+    @for (int i = 0; i < Model.Messages.Count; i++)
+    {
+        <div class="modal fade" id="reply@(i)" tabindex="-1" role="dialog" aria-labelledby="userListeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="userListeModalLabel">Nachrichtenverlauf</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            @for (int j = 0; j < Model.Messages[i].MessageReplies.Count; j++)
+                            {
+                                <li>
+                                    @Model.Messages[i].MessageReplies[j].Author schrieb am @Model.Messages[i].MessageReplies[j].Date.ToString()
+                                    : @Model.Messages[i].MessageReplies[j].Message
+                                </li>
+                            }
 
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-}
+    }
 
-
+</section>
 
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
 <script type="text/javascript">

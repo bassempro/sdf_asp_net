@@ -686,6 +686,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Images\delete.png.png" />
     <Content Include="MyCalendarDBM.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>MyCalendarDBM.edmx</DependentUpon>

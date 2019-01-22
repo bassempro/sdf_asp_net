@@ -179,7 +179,7 @@ namespace sdf_asp_net.Controllers
                     smtp.Send(m);
 
                     //comment out the block until this line for testing purposes (no email confirmation part 1)
-                    return RedirectToAction("Confirm", "Account");
+                    return RedirectToAction("Confirm", "Account", new {  emi  = user.Email });
                 }
                 AddErrors(result);
             }
@@ -189,9 +189,9 @@ namespace sdf_asp_net.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult Confirm(string Email)
+        public ActionResult Confirm(string emi)
         {
-            ViewBag.Email = Email;
+            ViewBag.Email = emi;
             return View();
         }
 
