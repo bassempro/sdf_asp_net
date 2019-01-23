@@ -155,12 +155,31 @@
     .divContainer{
         resize:vertical;    
     }
-  
+
+    #profileImg {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin: 5px 0;
+        border-style: solid;
+        border-color: #fff;
+        border-width: 1px;
+    }
+
+    #profileImg2 {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin: 5px 0;
+        border-style: solid;
+        border-color: #fff;
+        border-width: 1px;
+    }
 </style>
 <div class="col-md-12">
     <a href="@Url.Action("Create", "Project")" class="btn btn-primary float-right btn-lg active" role="button" aria-pressed="true">Projekt erstellen</a>
 
-    <input id="btnStartChat" type="button" class="submitButton btn btn-primary float-lg-right btn-lg active" value="Start Chat" aria-pressed="true" />
+    <input id="btnStartChat" type="button" class="submitButton btn btn-primary float-lg-right btn-lg active" value="Chat starten" aria-pressed="true" />
 </div>
 
 <h2>Projekte</h2>
@@ -175,7 +194,7 @@
         <div class="title" style="background-color:greenyellow;">
             Willkommen im Chat: [<span id='spanUser' style="color:brown;"></span>]
       
-             <h5 id="spanUser2" style="color:blue; float:right;">Online Users</h5>
+             <h5 id="spanUser2" style="color:blue; float:right;">Online Nutzer</h5>
         </div>
         <div class="content">
             <div id="divChatWindow" class="chatWindow">
@@ -187,7 +206,7 @@
         </div>
         <div class="messageBar">
             <input class="textbox" type="text" id="txtMessage" style="width:700px;" />
-            <input id="btnSendMsg" type="button" value="Send" class="submitButton  btn btn-primary btn-lg active" /><button type="button" class="emoticon" id="c">&#x1F600</button>
+            <input id="btnSendMsg" type="button" value="Senden" class="submitButton  btn btn-primary btn-lg active" /><button type="button" class="emoticon" id="c">&#x1F600</button>
            <div>
             <p id="emoji"></p>
 
@@ -541,7 +560,7 @@
                 '</div>' +
                 '<div class="buttonBar" style="background-color:green;  ">' +
                 '<input id="txtPrivateMessage" class="msgText" type="text"   />' +
-                '<input id="btnSendMessage" class="submitButton  btn btn-primary btn-lg active" type="button" style=""value="Send"   />' +'<button type="button" class="emoticon" id="wow">&#x1F600</button>' +
+                '<input id="btnSendMessage" class="submitButton  btn btn-primary btn-lg active" type="button" style=""value="Senden"   />' +'<button type="button" class="emoticon" id="wow">&#x1F600</button>' +
 
             
 

@@ -12,24 +12,24 @@
 
 <div class="container">
     <div class="row">
-        <button class="btn btn-primary" data-target="#create" data-toggle="modal"
-                style="font-variant-caps: all-small-caps">Create Event</button>
+        <button class="btn btn-primary float-left" data-target="#create" data-toggle="modal"
+                style="font-variant-caps: all-small-caps">Termin erstellen</button>
         <div class="modal" id="create" tabindex="-1">
             <div class="modal-content">
                 <div class="modal-header">
-                    <label>Create Event</label>
+                    <label>Termin erstellen</label>
                 </div>
                 <div class="modal-body">
                     <form id="diaform">
                         <div id="elements">
                             <div class="form-group">
-                                <!--<label>Subject</label>-->
-                                <input type="text" placeholder="Subject*" id="subject" maxlength="40" required
+                                <!--<label>Ihr Titel</label>-->
+                                <input type="text" placeholder="Ihr Titel*" id="subject" maxlength="40" required
                                        style="text-align: start; min-width: 500px" />
                             </div>
                             <div class="form-group">
-                                <!--<label>Description</label>-->
-                                <textarea placeholder="Description" id="description" maxlength="300"
+                                <!--<label>Ihre Beschreibung</label>-->
+                                <textarea placeholder="Ihre Beschreibung" id="description" maxlength="300"
                                           style="text-align: start; min-width: 500px; min-height: 200px"></textarea>
                             </div>
                             <div class="form-group">
@@ -40,7 +40,7 @@
                                        style="text-align: center" />
                             </div>
                             <div class="form-group">
-                                <label>End</label>
+                                <label>Ende</label>
                                 <input type="date" id="edate"
                                        style="text-align: center" />
                                 <input type="time" id="etime"
@@ -61,8 +61,8 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button value="Create" id="fincreate">Create</button>
-                    <button value="Cancel" data-dismiss="modal" id="cancel" onclick="document.location.reload(true)">Cancel</button>
+                    <button class="btn btn-success" value="Create" id="fincreate">Erstellen</button>
+                    <button class="btn btn-danger" value="Cancel" data-dismiss="modal" id="cancel" onclick="document.location.reload(true)">Abbrechen</button>
                 </div>
             </div>
         </div>
@@ -82,8 +82,8 @@
                 <p id="pDetails"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"
-                        style="font-variant-caps: all-small-caps">Close</button>
+                <button type="button" class="btn btn-succes" data-dismiss="modal"
+                        style="font-variant-caps: all-small-caps">Schließen</button>
             </div>
         </div>
     </div>
@@ -144,7 +144,7 @@
                 if ((event.subject == "") ||
                     (startdate == "") ||
                     (starttime == "")) {
-                    alert("Please fill in all required fields!");
+                    alert("Bitte füllen Sie alle Pflichtfelder aus!");
                     //$("#fincreate").prop("disabled", true);
                     //$("#diaform").validate().element("#fincreate");
                     return;
@@ -189,10 +189,10 @@
                             .html('<b>Start:</b>' + calEvent.start.format("DD-MMM-YYYY HH:mm a")));
                         if (calEvent.end != null) {
                             $description.append($('<p/>')
-                                .html('<b>End:</b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
+                                .html('<b>Ende:</b>' + calEvent.end.format("DD-MMM-YYYY HH:mm a")));
                         }
                         if (calEvent.description != null) {
-                            $description.append($('<p/>').html('<b>Description:</b>' + calEvent.description));
+                            $description.append($('<p/>').html('<b>Beschreibung:</b>' + calEvent.description));
                         }
                         $('#myModal #pDetails').empty().html($description);
 

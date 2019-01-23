@@ -57,15 +57,27 @@ namespace sdf_asp_net.Controllers
             var userName = User.Identity.GetUserName();
             ViewBag.Username = userName;
             DataTable dtblProjects = new DataTable();
-            
+            DataTable img = new DataTable();
+
+            byte[] profileImage = null;
+            string contentType = "";
+
             using (SqlConnection sqlCon = new SqlConnection(connectionString))
             {
                 sqlCon.Open();
                 SqlDataAdapter sqlDa = new SqlDataAdapter("SELECT * FROM Projects", sqlCon);
                 sqlDa.Fill(dtblProjects);
+
+                string selectQuery = "SELECT AspNetUsers.ProfileImage, AspNetUsers.FileContentType, AspNetUsers.UserName FROM AspNetUsers";
+
+                // Read Byte [] Value from Sql Table 
+                SqlCommand selectCommand = new SqlCommand(selectQuery, sqlCon);
+
+                sqlDa = new SqlDataAdapter(selectQuery, sqlCon);
+                sqlDa.Fill(img);
             }
 
-            for(int i = 0; i < dtblProjects.Rows.Count; i++)
+            for (int i = 0; i < dtblProjects.Rows.Count; i++)
             {
                 DataTable dtblProjectUser = new DataTable();
                 string id = dtblProjects.Rows[i][0].ToString();
@@ -91,11 +103,31 @@ namespace sdf_asp_net.Controllers
                     dtblProjects.Rows.RemoveAt(i);
                     i--;
                 }
-
-
             }
 
-                return View(dtblProjects);
+            Dictionary<string, string> images = new Dictionary<string, string>();
+            Debug.WriteLine("++++++++++++++++++ " + img.Rows.Count);
+            images.Add("testo", "test");
+            if (img.Rows.Count >= 1)
+            {
+                for (int i = 0; i < img.Rows.Count; i++)
+                {
+                    if (img.Rows[i][0] != System.DBNull.Value && img.Rows[i][1] != System.DBNull.Value && img.Rows[i][2] != System.DBNull.Value)
+                    {
+                        profileImage = (byte[])img.Rows[i][0];
+                        contentType = img.Rows[i][1].ToString();
+                        userName = img.Rows[i][2].ToString();
+
+                        Debug.WriteLine("++++++++++++++++++ " + img.Rows.Count + " " + userName);
+
+                        images.Add(userName, string.Format("data:{0};base64,{1}", contentType, Convert.ToBase64String(profileImage)));
+                    }
+
+                }
+            }
+            ViewBag.ProfileImages = images;
+
+            return View(dtblProjects);
         }
 
         // GET: Project/Create
@@ -307,7 +339,7 @@ namespace sdf_asp_net.Controllers
                             new System.Net.Mail.MailAddress("sdf.asp.donet@gmail.com", "Projekteinladung"),
                             new System.Net.Mail.MailAddress(usersToAdd[i]));
                         m.Subject = name;
-                        m.Body = string.Format("Dear {0}, Sie wurden zu dem Projekt " + name + " eingeladen. Unter dieser Addresse: " + HttpContext.Request.Url.Authority + "/Project/DetailView/" + Convert.ToInt32(dtblProject.Rows[0][0].ToString()) + " können sie das Projekt einsehen",
+                        m.Body = string.Format("Hallo {0}, Sie wurden zu dem Projekt " + name + " eingeladen. Unter dieser Addresse: " + HttpContext.Request.Url.Authority + "/Project/DetailView/" + Convert.ToInt32(dtblProject.Rows[0][0].ToString()) + " können sie das Projekt einsehen",
                          usersToAdd[i], Request.Url.Scheme);
                         m.IsBodyHtml = true;
                         System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.gmail.com");
