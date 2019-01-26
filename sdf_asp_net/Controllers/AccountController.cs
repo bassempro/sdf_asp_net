@@ -162,14 +162,14 @@ namespace sdf_asp_net.Controllers
                     // await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
-                         new System.Net.Mail.MailAddress("sdf.asp.donet@gmail.com", "Konto Verifizierung"),
+                         new System.Net.Mail.MailAddress("testi777@web.de", "Konto Verifizierung"),
                              new System.Net.Mail.MailAddress(user.Email));
                     m.Subject = "Email confirmation";
                     m.Body = string.Format("Dear {0}< BR /> Danke für Ihre Registrierung , bitte klicken Sie den Link hier, um Ihr Konto zu bestätigen: < a href =\"{1} title =\"User Email Confirm\">{1}</a>",
                     user.UserName, Url.Action("ConfirmEmail", "Account", new { Token = user.Email, Email = user.Email }, Request.Url.Scheme));
                     m.IsBodyHtml = true;
-                    System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.gmail.com");
-                    smtp.Credentials = new System.Net.NetworkCredential("sdf.asp.donet@gmail.com", "test-123123");
+                    System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.web.de");
+                    smtp.Credentials = new System.Net.NetworkCredential("testi777@web.de", "Testlauf789");
                     m.IsBodyHtml = true;
                     // smtp.ServerCertificateValidationCallback = () => true;
                     smtp.Port = 587;
@@ -263,14 +263,14 @@ namespace sdf_asp_net.Controllers
 
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
-            new System.Net.Mail.MailAddress("sdf.asp.donet@gmail.com", "SDF"),
+            new System.Net.Mail.MailAddress("testi777@web.de", "SDF"),
             new System.Net.Mail.MailAddress(user.Email));
                 m.Subject = "Password Recovery";
                 m.Body = string.Format("Dear {0}< BR /> To Reset your Password , please click on the below link to complete your Password Reset: < a href =\"{1} title =\"User Reset Password\">{1}</a>",
                 user.UserName, Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, Request.Url.Scheme));
                 m.IsBodyHtml = true;
-                System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.gmail.com");
-                smtp.Credentials = new System.Net.NetworkCredential("sdf.asp.donet@gmail.com", "test-123123");
+                System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.web.de");
+                smtp.Credentials = new System.Net.NetworkCredential("testi777@web.de", "Testlauf789");
                 m.IsBodyHtml = true;
                 // smtp.ServerCertificateValidationCallback = () => true;
                 smtp.Port = 587;

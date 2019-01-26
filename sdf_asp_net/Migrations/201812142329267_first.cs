@@ -18,7 +18,6 @@ namespace sdf_asp_net.Migrations
                         MyProperty = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.id);
-            
         }
         
         public override void Down()
