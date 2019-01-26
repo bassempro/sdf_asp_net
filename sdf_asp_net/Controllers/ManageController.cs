@@ -7,6 +7,10 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using sdf_asp_net.Models;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+using System.Text;
 
 namespace sdf_asp_net.Controllers
 {
@@ -15,6 +19,7 @@ namespace sdf_asp_net.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        string connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=aspnet-sdf_asp_net-20181114091107;Integrated Security=True";
 
         public ManageController()
         {
@@ -50,6 +55,32 @@ namespace sdf_asp_net.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult ChangeProfileImage(HttpPostedFileBase postedFile)
+        {
+            if (postedFile != null)
+            {
+                byte[] bytes;
+                using (BinaryReader br = new BinaryReader(postedFile.InputStream))
+                {
+                    bytes = br.ReadBytes(postedFile.ContentLength);
+                }
+
+                using (SqlConnection sqlCon = new SqlConnection(connectionString))
+                {
+                    sqlCon.Open();
+                    string query = "UPDATE AspNetUsers SET ProfileImage = @ProfileImage, FileName = @FileName, FileContentType = @FileContentType WHERE Email = @Email";
+                    SqlCommand sqlCmd = new SqlCommand(query, sqlCon);
+                    sqlCmd.Parameters.AddWithValue("@Email", User.Identity.GetUserName());
+                    sqlCmd.Parameters.AddWithValue("@ProfileImage", bytes);
+                    sqlCmd.Parameters.AddWithValue("@FileName", Path.GetFileName(postedFile.FileName));
+                    sqlCmd.Parameters.AddWithValue("@FileContentType", postedFile.ContentType);
+                    sqlCmd.ExecuteNonQuery();
+                }
+            }
+            return RedirectToAction("Index");
+        }
+
         //
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
@@ -64,9 +95,37 @@ namespace sdf_asp_net.Controllers
                 : "";
 
             var userId = User.Identity.GetUserId();
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            byte[] profileImage = null;
+            string contentType = "";
+
+            using (SqlConnection sqlCon = new SqlConnection(connectionString))
+            {
+                sqlCon.Open();
+                string selectQuery = "SELECT ProfileImage, FileContentType FROM AspNetUsers Where UserName ='" + User.Identity.GetUserName()+"'";
+
+                // Read Byte [] Value from Sql Table 
+                SqlCommand selectCommand = new SqlCommand(selectQuery, sqlCon);
+                SqlDataReader reader;
+                reader = selectCommand.ExecuteReader();
+                if (reader != null)
+                {
+                    if (reader.Read() && !System.Convert.IsDBNull(reader.GetValue(0)))
+                    {
+                        profileImage = (byte[])reader.GetValue(0);
+                        contentType = (string)reader.GetValue(1);
+
+                        ViewBag.imgSrc = string.Format("data:{0};base64,{1}",
+                            contentType, Convert.ToBase64String(profileImage));
+                    }
+                }
+            }
+
             var model = new IndexViewModel
             {
+                UserName = user.UserName,
                 HasPassword = HasPassword(),
+                ProfileImage = profileImage,
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),

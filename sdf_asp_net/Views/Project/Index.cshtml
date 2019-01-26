@@ -1,0 +1,718 @@
+﻿@model System.Data.DataTable
+@{
+
+    ViewBag.Title = "Projekte";
+}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    #header {
+        padding: 20px;
+        background-color: #d7e5e4;
+        border-bottom: #5f9482 solid 2px;
+        color: #1e4638;
+        font-size: 24px;
+    }
+
+
+
+    .submitButton:hover {
+        background-color: #e1e1e1;
+    }
+
+
+
+    
+
+    .chatRoom {
+        width: auto;
+        margin-left: auto;
+        margin-right: auto;
+        border: solid 1px gray;
+    }
+
+        .chatRoom .title {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 8px;
+        }
+
+        .chatRoom .content {
+            height: auto;
+            clear: both;
+        }
+
+            .chatRoom .content .chatWindow {
+                float: left;
+                width: 859px;
+                height: 300px;
+                overflow-y: scroll;
+            }
+
+                .chatRoom .content .chatWindow .message {
+                    padding: 4px;
+                }
+
+                    .chatRoom .content .chatWindow .message .userName {
+                        font-weight: bold;
+                    }
+
+            .chatRoom .content .users {
+                float: right;
+                width: 240px;
+                height: 300px;
+            }
+
+                .chatRoom .content .users .user {
+                    display: block;
+                    cursor: pointer;
+                    padding: 4px;
+                    border-bottom: solid 1px;
+                    border:groove;
+                }
+
+                .chatRoom .content .users .loginUser {
+                    display: block;
+                    padding: 4px;
+                    border-bottom: solid 1px;
+                }
+
+
+
+        .chatRoom .messageBar {
+            border-top: solid 1px;
+            padding: 4px;
+        }
+
+            .chatRoom .messageBar .textbox {
+                width: 550px;
+            }
+
+    .disconnect {
+        position: absolute;
+        margin: 10px;
+        background-color: #ffcbcb;
+        padding: 4px;
+        border: solid 1px red;
+    }
+
+
+    .draggable {
+        position: page;
+        border: solid 1px;
+        width: 250px;
+    }
+
+        .draggable .header {
+            cursor: move;
+            border-bottom: solid 1px;
+        }
+
+        .draggable .selText {
+            color: black;
+            padding: 4px;
+        }
+
+        .draggable .messageArea {
+            width: 250px;
+            overflow-y: scroll;
+            height: 200px;
+            border-bottom: solid 1px;
+        }
+
+            .draggable .messageArea .message {
+                padding: 4px;
+            }
+
+        .draggable .buttonBar {
+            width: 250px;
+            padding: 4px;
+        }
+
+            .draggable .buttonBar .msgText {
+                width: 172px;
+            }
+
+            .draggable .buttonBar .button {
+                margin-left: 4px;
+                width: 55px;
+            }
+
+    .tata {
+        display: none
+           
+    }
+    .tata2 {
+        display: none
+    }
+
+    .emoticon {
+        background-color: dodgerblue;
+        width: 60px;
+        height: 37px;
+    }
+    .divContainer{
+        resize:vertical;    
+    }
+
+    #profileImg {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        margin: 5px 0;
+        border-style: solid;
+        border-color: #fff;
+        border-width: 1px;
+    }
+
+    #profileImg2 {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        margin: 5px 0;
+        border-style: solid;
+        border-color: #fff;
+        border-width: 1px;
+    }
+</style>
+<div class="col-md-12">
+    <a href="@Url.Action("Create", "Project")" class="btn btn-primary float-right btn-lg active" role="button" aria-pressed="true">Projekt erstellen</a>
+
+    <input id="btnStartChat" type="button" class="submitButton btn btn-primary float-lg-right btn-lg active" value="Chat starten" aria-pressed="true" />
+</div>
+
+<h2>Projekte</h2>
+
+<hr />
+
+
+<div id="divContainer">
+
+
+    <div id="divChat" class="chatRoom" style="background-color:antiquewhite;">
+        <div class="title" style="background-color:greenyellow;">
+            Willkommen im Chat: [<span id='spanUser' style="color:brown;"></span>]
+      
+             <h5 id="spanUser2" style="color:blue; float:right;">Online Nutzer</h5>
+        </div>
+        <div class="content">
+            <div id="divChatWindow" class="chatWindow">
+               
+            </div>
+            <div id="divusers" class="users" >
+         
+            </div>
+        </div>
+        <div class="messageBar">
+            <input class="textbox" type="text" id="txtMessage" style="width:700px;" />
+            <input id="btnSendMsg" type="button" value="Senden" class="submitButton  btn btn-primary btn-lg active" /><button type="button" class="emoticon" id="c">&#x1F600</button>
+           <div>
+            <p id="emoji"></p>
+
+            <table id="theTable" border="1" align="center" class="tata" cols="3">
+
+                <tr>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F600</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F617</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F61B</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F60D</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F618</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F617</td>
+                </tr>
+                <tr>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F611</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F62C</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F62F</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F911</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F917</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F92D</td>
+                </tr>
+                <tr>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F606</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F605</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F602</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F92B</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F914</td>
+                    <td type="button" id="td1" onclick="content(this)">&#x1F910</td>
+                </tr>
+
+            </table>
+
+               </div>
+
+        </div>
+
+
+
+
+
+        <script>
+            
+             
+            var wich = "";
+
+                $("#c").click(function (event) {
+                    $(":hidden").css("visibility", "visible");
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                    }
+                    else
+
+                        $('#theTable').show();
+
+                });
+                $("#td1,#td2,#td3,#td4,#td5,#td6").click(function (event) {
+
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                    }
+
+
+            });
+            function content(elem) {
+
+                var p = document.getElementById("emoji");
+                p.emo = '' + elem.innerText;
+                var p = document.getElementById("emoji");
+
+                var txt = document.getElementById(wich).value;
+                txt = txt + p.emo;
+                document.getElementById(wich).value = txt;
+
+
+
+
+
+            }
+
+
+        </script>
+
+
+        <input id="hdId" type="hidden" />
+        <input id="hdUserName" type="hidden" />
+    </div>
+
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover">
+        <tr>
+            <th>Name</th>
+            <th>Beschreibung</th>
+            <th>Projektleiter</th>
+            <th>Funktionen</th>
+
+        </tr>
+        @for (int i = 0; i < Model.Rows.Count; i++)
+        {
+            <tr>
+                <td>@Model.Rows[i][1]</td>
+                <td>@Model.Rows[i][2]</td>
+                <td>@Model.Rows[i][4]</td>
+
+                <td>
+                    <a href="@Url.Action("DetailView", "Project", new { @id=Model.Rows[i][0]})" class="btn btn-primary btn-lg" role="button" aria-pressed="true">Anzeigen</a>
+                    @if (@Model.Rows[i][4].ToString().Contains(@ViewBag.Username))
+                    {
+                        <a href="@Url.Action("Edit", "Project", new { @id=Model.Rows[i][0]})" class="btn btn-success btn-lg" role="button" aria-pressed="true">Bearbeiten</a>
+                        <a href="@Url.Action("Delete", "Project", new { @id=Model.Rows[i][0]})" class="btn btn-danger btn-lg" role="button" aria-pressed="true">Löschen</a>
+                    }
+
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+
+    <script src="/Scripts/ui/jquery.ui.core.js"></script>
+    <script src="/Scripts/ui/jquery.ui.widget.js"></script>
+    <script src="/Scripts/ui/jquery.ui.mouse.js"></script>
+    <script src="/Scripts/ui/jquery.ui.draggable.js"></script>
+    <script src="/Scripts/ui/jquery.ui.resizable.js"></script>
+
+    <!--Script references. -->
+    <!--The jQuery library is required and is referenced by default in _Layout.cshtml. -->
+    <!--Reference the SignalR library. -->
+    <script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+    <!--Reference the autogenerated SignalR hub script. -->
+    <script src="~/signalr/hubs"></script>
+
+    <!--SignalR script to update the chat page and send messages.-->
+    <script>
+        $(function () {
+
+            setScreen(false);
+
+            // Declare a proxy to reference the hub.
+            var chatHub = $.connection.chatHub;
+
+            registerClientMethods(chatHub);
+
+            // Start Hub
+            $.connection.hub.start().done(function () {
+
+                registerEvents(chatHub)
+
+            });
+
+        });
+
+        function setScreen(isLogin) {
+
+            if (!isLogin) {
+
+                $("#divChat").hide();
+                $("#divLogin").show();
+            }
+            else {
+
+                $("#divChat").show();
+                $("#divLogin").hide();
+            }
+
+        }
+
+        function registerEvents(chatHub) {
+
+            $("#btnStartChat").click(function () {
+
+                var name = '@ViewBag.Username';
+                if (name.length > 0) {
+                    chatHub.server.connect(name);
+                }
+                else {
+
+                }
+
+            });
+
+
+            $('#btnSendMsg').click(function () {
+
+                var msg = $("#txtMessage").val();
+                if (msg.length > 0) {
+
+                    var userName = $('#hdUserName').val();
+                    chatHub.server.sendMessageToAll(userName, msg);
+                    $("#msg").css("background-color","#78e08f")
+                    $("#txtMessage").val('');
+                }
+            });
+
+
+            $("#txtNickName").keypress(function (e) {
+                if (e.which == 13) {
+                    $("#btnStartChat").click();
+                }
+            });
+
+            $("#txtMessage").keypress(function (e) {
+                if (e.which == 13) {
+                    $('#btnSendMsg').click();
+                }
+            });
+
+
+        }
+
+        function registerClientMethods(chatHub) {
+
+            // Calls when user successfully logged in
+            chatHub.client.onConnected = function (id, userName, allUsers, messages) {
+
+                setScreen(true);
+
+                $('#hdId').val(id);
+                $('#hdUserName').val(userName);
+                $('#spanUser').html(userName);
+
+                // Add All Users
+                for (i = 0; i < allUsers.length; i++) {
+
+                    AddUser(chatHub, allUsers[i].ConnectionId, allUsers[i].UserName);
+                }
+
+                // Add Existing Messages
+                for (i = 0; i < messages.length; i++) {
+
+                    AddMessage(messages[i].UserName, messages[i].Message);
+                }
+
+
+            }
+
+            // On New User Connected
+            chatHub.client.onNewUserConnected = function (id, name) {
+
+                AddUser(chatHub, id, name);
+            }
+
+
+            // On User Disconnected
+            chatHub.client.onUserDisconnected = function (id, userName) {
+
+                $('#' + id).remove();
+
+                var ctrId = 'private_' + id;
+                $('#' + ctrId).remove();
+
+
+                var disc = $('<div class="disconnect">"' + userName + '" hat den Chat verlassen!</div>');
+
+                $(disc).hide();
+                $('#divusers').prepend(disc);
+                $(disc).fadeIn(200).delay(2000).fadeOut(200);
+
+            }
+
+            chatHub.client.messageReceived = function (userName, message) {
+
+                AddMessage(userName, message);
+            }
+
+
+            chatHub.client.sendPrivateMessage = function (windowId, fromUserName, message) {
+
+                var ctrId = 'private_' + windowId;
+
+
+                if ($('#' + ctrId).length == 0) {
+
+                    createPrivateChatWindow(chatHub, windowId, ctrId, fromUserName);
+
+                }
+
+                $('#' + ctrId).find('#divMessage').append('<div class="message"><span class="userName">' + fromUserName + '</span>: ' + message + '</div>');
+
+                // set scrollbar
+                var height = $('#' + ctrId).find('#divMessage')[0].scrollHeight;
+                $('#' + ctrId).find('#divMessage').scrollTop(height);
+
+            }
+
+        }
+
+        function AddUser(chatHub, id, name) {
+
+            var userId = $('#hdId').val();
+
+            var code = "";
+
+            if (userId == id) {
+
+                code = $('<div class="loginUser" style="background-color:gold;">' + name + "</div>");
+
+            }
+            else {
+
+                code = $('<a id="' + id + '" class="user" style="background-color:gold;" >' + name + '<a>');
+
+                $(code).dblclick(function () {
+
+                    var id = $(this).attr('id');
+
+                    if (userId != id)
+                        OpenPrivateChatWindow(chatHub, id, name);
+
+                });
+            }
+
+            $("#divusers").append(code);
+
+        }
+
+        function AddMessage(userName, message) {
+            $('#divChatWindow').append('<div class="message"><span class="userName">' + userName + '</span>: ' + message + '</div>');
+
+            var height = $('#divChatWindow')[0].scrollHeight;
+            $('#divChatWindow').scrollTop(height);
+        }
+
+        function OpenPrivateChatWindow(chatHub, id, userName) {
+
+            var ctrId = 'private_' + id;
+
+            if ($('#' + ctrId).length > 0) return;
+
+            createPrivateChatWindow(chatHub, id, ctrId, userName);
+
+        }
+
+        function createPrivateChatWindow(chatHub, userId, ctrId, userName) {
+
+            var div = '<div id="' + ctrId + '" class="ui-widget-content draggable" rel="0">' +
+                '<div class="header" style="background-color:green;">' +
+                '<div  style="float:right;">' +
+                '<h8 id="imgDelete"  style="cursor:pointer; float:right;">&#x274C"</h8> '+
+                '</div>' +
+
+                '<span class="selText" style="color:yellow;" rel="0">' + userName + '</span>' +
+                '</div>' +
+                '<div id="divMessage" class="messageArea" style="background-color:antiquewhite;">' +
+
+                '</div>' +
+                '<div class="buttonBar" style="background-color:green;  ">' +
+                '<input id="txtPrivateMessage" class="msgText" type="text"   />' +
+                '<input id="btnSendMessage" class="submitButton  btn btn-primary btn-lg active" type="button" style=""value="Senden"   />' +'<button type="button" class="emoticon" id="wow">&#x1F600</button>' +
+
+            
+
+              ' </div >'
+
+
+                +
+                '</div>' +
+                '   <div>' +
+              
+                +
+                '</div>' +
+                
+                
+                '<p id = "emoji"/>' +
+
+                ' <table id="theTable3" border="1" align="center" class="tata2" cols="3">' +
+
+                '  <tr>' +
+                '<td type="button" id="u" onclick="content(this)">&#x1F600</td>' +
+                ' <td type="button" id="u" onclick="content(this)">&#x1F617</td>' +
+                '<td type="button" id="u" onclick="content(this)">&#x1F61B</td>' +
+                ' <td type="button" id="u" onclick="content(this)">&#x1F60D</td>' +
+                ' <td type="button" id="u" onclick="content(this)">&#x1F618</td>' +
+                '<td type="button" id="u" onclick="content(this)">&#x1F617</td>' +
+                ' </tr>' +
+                ' <tr>' +
+                ' <td type="button" id="i" onclick="content(this)">&#x1F611</td>' +
+                ' <td type="button" id="i" onclick="content(this)">&#x1F62C</td>' +
+                '<td type="button" id="i" onclick="content(this)">&#x1F62F</td>' +
+                '<td type="button" id="i" onclick="content(this)">&#x1F911</td>' +
+                ' <td type="button" id="i" onclick="content(this)">&#x1F917</td>' +
+                '   <td type="button" id="i" onclick="content(this)">&#x1F92D</td> ' +
+                '   </tr> ' +
+                '<tr>' +
+                ' <td type="button" id="o" onclick="content(this)">&#x1F606</td>' +
+                ' <td type="button" id="o" onclick="content(this)">&#x1F605</td>' +
+                ' <td type="button" id="o" onclick="content(this)">&#x1F602</td>' +
+                '<td type="button" id="o" onclick="content(this)">&#x1F92B</td>' +
+                '<td type="button" id="o" onclick="content(this)">&#x1F914</td>' +
+                ' <td type="button" id="o" onclick="content(this)">&#x1F910</td>' +
+                ' </tr>' +
+
+                '  </table>' 
+                ;
+
+            $(document).ready(function () {
+               
+                $("#u,#i,#o").click(function (event) {
+
+                 
+                    if ($('#theTable3').is(":visible")) {
+
+                        $('#theTable3').hide();
+                    }
+                    else
+                        $('#theTable3').show();
+
+
+                });
+
+            });
+          
+            $(document).ready(function () {
+            $("#wow").click(function () {
+                wich = "txtPrivateMessage";
+           
+
+                });
+            });
+          
+
+
+
+
+
+            $(document).ready(function () {
+            $("#c").click(function () {
+                wich = "txtMessage";
+                
+            });
+            });
+
+         
+          
+            $(document).ready(function () {
+                $("#wow").click(function () {
+                    $(":hidden").css("visibility", "visible");
+                    if ($('#theTable3').is(":visible")) {
+
+                        $('#theTable3').hide();
+                    }
+                    else
+
+                        $('#theTable3').show();
+
+                
+          
+                });
+            });
+
+
+
+            var $div = $(div);
+
+            // DELETE BUTTON IMAGE
+            $div.find('#imgDelete').click(function () {
+                $('#' + ctrId).remove();
+            });
+
+            // Send Button event
+            $div.find("#btnSendMessage").click(function () {
+
+                $textBox = $div.find("#txtPrivateMessage");
+                var msg = $textBox.val();
+                if (msg.length > 0) {
+
+                    chatHub.server.sendPrivateMessage(userId, msg);
+                    $textBox.val('');
+                }
+            });
+
+            // Text Box event
+            $div.find("#txtPrivateMessage").keypress(function (e) {
+                if (e.which == 13) {
+                    $div.find("#btnSendMessage").click();
+                }
+            });
+
+            AddDivToContainer($div);
+
+        }
+        $(function () {
+            $("#draggable").draggable();
+        });
+        function AddDivToContainer($div) {
+            $('#divContainer').prepend($div);
+
+            $div.draggable({
+
+                handle: ".header",
+                stop: function () {
+
+                }
+            });
+
+            ////$div.resizable({
+            ////    stop: function () {
+
+            ////    }
+            ////});
+
+        }
+    </script>
+}

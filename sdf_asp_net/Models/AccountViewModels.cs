@@ -10,11 +10,6 @@ namespace sdf_asp_net.Models
         public string Email { get; set; }
     }
 
-    public class ExternalLoginListViewModel
-    {
-        public string ReturnUrl { get; set; }
-    }
-
     public class SendCodeViewModel
     {
         public string SelectedProvider { get; set; }
@@ -78,7 +73,7 @@ namespace sdf_asp_net.Models
         [DataType(DataType.Password)]
         [Display(Name = "Kennwort bestätigen")]
         [Compare("Password", ErrorMessage = "Das Kennwort entspricht nicht dem Bestätigungskennwort.")]
-        public string ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; }  
     }
 
     public class ResetPasswordViewModel

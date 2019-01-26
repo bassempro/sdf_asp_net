@@ -1,0 +1,29 @@
+﻿@model List<sdf_asp_net.Models.ChatModel>
+
+
+
+<h2>Chat</h2>
+
+<label>All</label>
+<input type="text" id="messageAll" />
+<input type="button" id="btnSendAll" value="Send to all" />
+<input type="hidden" id="displayname" />
+
+<label>Group</label>
+<input type="text" id="messageGroup" />
+<input type="button" id="btnSendGroup" value="Send to Group" />
+<input type="hidden" id="displayname" />
+<br />
+<p></p>
+
+
+
+
+
+<ul id="discussion"></ul>
+@foreach (var _model in Model)
+{
+    <li>gesendet: @_model.user : @_model.message | @_model.dateStamp </li>
+}
+
+

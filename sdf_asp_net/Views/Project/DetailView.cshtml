@@ -1,0 +1,559 @@
+﻿@model sdf_asp_net.ViewModels.ProjectViewModel
+
+<aside>
+    @{
+        Layout = "~/Views/Shared/_Layout2.cshtml";
+        ViewBag.Title = "DetailView";
+    }
+
+</aside>
+<section class="set">
+    <style>
+        .test {
+            color: #fff;
+            text-align: center;
+            line-height: 45px;
+            margin: 5px 0;
+        }
+
+        .test2 {
+            color: #fff;
+            text-align: center;
+            line-height: 65px;
+            margin: 5px 0;
+        }
+
+        #profileImg {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 5px 0;
+            border-style: solid;
+            border-color: #fff;
+            border-width: 1px;
+        }
+
+        #profileImg2 {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 5px 0;
+            border-style: solid;
+            border-color: #fff;
+            border-width: 1px;
+        }
+        .set{
+            text-align:left;    
+        }
+        .tata {
+            display: none;
+        }
+
+
+        .emoticon {
+            background-color: dodgerblue;
+            width: 60px;
+            height: 37px;
+        }
+    </style>
+
+
+
+    <div class="col-md-12">
+        <div class="jumbotron">
+            <h1 class="display-4">Projekt: @Html.DisplayFor(model => model.Name)</h1>
+            <p class="lead">Beschreibung: @Html.DisplayFor(model => model.Description)</p>
+            <hr class="my-4">
+            <p>Projektleiter: @Html.DisplayFor(model => model.ManagerName) </p>
+
+            <div class="area">
+
+                <h3>Chat</h3>
+
+                <textarea style="resize: none;" id="text" name="text" cols="70" rows="8"></textarea>
+                <textarea style="resize: none;" id="user" name="text" cols="50" rows="8"></textarea>
+
+
+
+                <br />
+                <input type="text" id="messageGroup" />
+
+                <input type="button" id="btnSendGroup" value="Send" /><button type="button" class="emoticon" id="c">&#x1F600</button>
+
+                <input type="text" id="privat" />
+                <input type="button" id="btnPrivat" value="Send" /><button type="button" class="emoticon" id="bt1">&#x1F600</button>
+
+
+                <br />
+
+                <p id="emoji"></p>
+
+                <table id="theTable" border="1" class="tata" cols="3">
+
+                    <tr>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F600</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F617</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F61B</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F60D</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F618</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F617</td>
+                    </tr>
+                    <tr>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F611</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F62C</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F62F</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F911</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F917</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F92D</td>
+                    </tr>
+                    <tr>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F606</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F605</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F602</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F92B</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F914</td>
+                        <td type="button" id="td1" onclick="content(this)">&#x1F910</td>
+                    </tr>
+
+                </table>
+
+
+
+
+            </div>
+
+
+
+
+
+            <script>
+
+
+                $("#bt1").click(function (event) {
+                    $(":hidden").css("visibility", "visible");
+                    $('#theTable').attr('align', 'center');
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                        $('#theTable').attr('align', 'center');
+                    }
+                    else
+
+                        $('#theTable').show();
+
+                });
+
+                $("#c").click(function (event) {
+                    $(":hidden").css("visibility", "visible");
+                    $('#theTable').attr('align', 'left');
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                        $('#theTable').attr('align', 'left');
+                    }
+                    else
+
+                        $('#theTable').show();
+
+                });
+
+
+                $("#td1,#td2,#td3,#td4,#td5,#td6").click(function (event) {
+
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                    }
+
+
+                });
+
+                var api_key = "";
+                $("#bt1").click(function () {
+                    api_key = "privat";
+
+                });
+                $("#c").click(function () {
+                    api_key = "messageGroup";
+
+                });
+
+
+                function content(elem) {
+
+                    var p = document.getElementById("emoji");
+                    p.emo = '' + elem.innerText;
+                    var p = document.getElementById("emoji");
+
+                    var txt = document.getElementById(api_key).value;
+                    txt = txt + p.emo;
+                    document.getElementById(api_key).value = txt;
+
+
+
+
+
+                }
+
+                $("#td1,#td2,#td3,#td4,#td5,#td6").click(function (event) {
+
+                    if ($('#theTable').is(":visible")) {
+
+                        $('#theTable').hide();
+                    }
+
+
+                });
+
+
+
+
+
+
+
+
+
+
+
+            </script>
+
+
+        </div>
+    </div>
+
+
+
+
+
+
+    @{string userName = Model.ManagerName;}
+
+
+    <hr />
+    @using (Html.BeginForm("DownloadFile", "Project", FormMethod.Post))
+    {
+        <input type="hidden" id="hfFileId" name="FileId" />
+        <input type="submit" id="btnDownload" value="Download" style="display:none" />
+    }
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-9">
+                <div class="list-group" >
+                    <ul>
+                        <h2>Messageboard</h2>
+                        @for (int i = 0; i < Model.Messages.Count; i++)
+                        {
+
+                            string value = "";
+                            string key = Convert.ToString(@Model.Messages[i].Author);
+                            string imgId = "msgImg" + @Model.Messages[i].Author + i.ToString();
+
+                            <div id="hasImg" style="display: none;">
+                                ja
+                            </div>
+
+                            if (@ViewBag.Images.TryGetValue(key.Trim(), out value))
+                            {
+                                <li class="list-group-item list-group-item-action flex-column align-items-start active">
+                                    <div id="@imgId" style="display: inline-block;">
+                                    </div>
+                                    <div style="display: inline-block;" >
+                                        <small class="mb-1">von: @Model.Messages[i].Author</small>
+                                        <br />
+                                        <small>veröffentlicht am: @Model.Messages[i].Date</small>
+                                    </div>
+                                    <hr style="width: 100%; color: white; height: 1px; background-color:white;" />
+                                </li>
+                                <script type="text/javascript">
+                                    document.getElementById("hasImg").innerHTML = "ja";
+                                </script>
+                            }
+                            else
+                            {
+                                <li class="list-group-item list-group-item-action flex-column align-items-start active">
+                                    <div id="@imgId" class="test2" style="display: inline-block;">
+                                    </div>
+                                    <div style="display: inline-block;">
+                                        <small class="mb-1">von: @Model.Messages[i].Author</small>
+                                        <br />
+                                        <small>veröffentlicht am: @Model.Messages[i].Date</small>
+                                    </div>
+                                    <hr style="width: 100%; color: white; height: 1px; background-color:white;" />
+                                </li>
+                                <script type="text/javascript">
+                                    document.getElementById("hasImg").innerHTML = "nein";
+                                </script>
+                            }
+
+                            <script type="text/javascript">
+                                var img = document.getElementById("hasImg").textContent;
+                                if (img.localeCompare("ja") == 0) {
+                                    var member = @Html.Raw(Json.Encode(@Model.Messages[i].Author));
+                                    var id = "msgImg" + member+@i.ToString();
+                                    var divId = "profileImg2";
+                                    var applicationArea = document.getElementById(id);
+
+                                    var newDiv = document.createElement("img");
+                                    newDiv.id = divId;
+                                    newDiv.src = '@value';
+                                    newDiv.class = "profileImg2";
+                                    applicationArea.appendChild(newDiv);
+                                }
+                                else {
+                                    var member = @Html.Raw(Json.Encode(@Model.Messages[i].Author));
+                                    var id = "msgImg" + member+@i.ToString();
+                                    var divId = "profileImage" + member+@i.ToString();
+                                    var applicationArea = document.getElementById(id);
+
+                                    var newDiv = document.createElement("div");
+                                    newDiv.id = divId;
+                                    newDiv.class = 'test';
+                                    applicationArea.appendChild(newDiv);
+
+                                    myfunction2(member, @i);
+                                }
+                            </script>
+
+                            <li class="list-group-item list-group-item-action flex-column align-items-start active">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h2 class="mb-1">@Model.Messages[i].Message</h2>
+                                </div>
+                                <hr style="width: 100%; color: white; height: 1px; background-color:white;" />
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">@Model.Messages[i].FileName</h6>
+                                    <small class="mb-1">@Model.Messages[i].FileContentType</small>
+                                </div>
+                            </li>
+                            if (@ViewBag.IsAuthorized != null && userName != null)
+                            {
+                                if (userName.ToString().Contains(@ViewBag.IsAuthorized) && @Model.Messages[i].FileName.ToString().Length > 0)
+                                {
+                                    <a href="javascript:;" class="btn btn-success float-right" onclick="DownloadFile(@Model.Messages[i].Id)">Download</a>
+                                }
+                                using (Html.BeginForm("Reply", "Project", FormMethod.Post))
+                                {
+                                    <input type="hidden" name="projectId" class="form-control" value="@Model.Id" aria-label="Message" aria-describedby="button-addon4">
+                                    <input type="hidden" name="messageboardId" class="form-control" value="@Model.Messages[i].Id" aria-label="Message" aria-describedby="button-addon4">
+                                    <div class="input-group-append" id="button-addon4">
+                                        <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Antwort" aria-label="Message" aria-describedby="button-addon4">
+                                        <input type="submit" id="btnUpload" value="Senden" class="btn btn-primary" />
+                                    </div>
+                                }
+                            }
+                            if (Model.Messages[i].MessageReplies.Count > 0)
+                            {
+                                <button type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#reply@(i)">Diskussion</button>
+                            }
+                            <br />
+                            <br />
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+    @using (Html.BeginForm("Message", "Project", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        if (@ViewBag.IsAuthorized != null && userName != null)
+        {
+            if (userName.ToString().Contains(@ViewBag.IsAuthorized))
+            {
+                <div class="input-group">
+                    <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Nachricht" aria-label="Message" aria-describedby="button-addon4">
+                    <input type="hidden" name="projectId" class="form-control" value="@Html.DisplayFor(model => model.Id)" aria-label="Message" aria-describedby="button-addon4">
+                    <div class="input-group-append" id="button-addon4">
+                        <input type="file" name="postedFile" id="imgInp" class="btn btn-primary" />
+                        <input type="button" value="Vorschau" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" />
+
+                        <!-- Modal for Image Preview -->
+                        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Vorschau</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <iframe id="blah" style="width: 100%; height: 500px; display: none;" src="#" alt="ausgewählte Datei"></iframe>
+                                        <p id="noPreview" style="display: inline;">
+                                            Es ist keine Vorschau verfügbar.
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="submit" id="btnUpload" value="upload" class="btn btn-primary" />
+                    </div>
+                </div>
+            }
+        }
+    }
+
+    <br />
+
+    <p>
+        <a href="@Url.Action("Index", "Project")" class="btn btn-success float-right btn-lg" role="button" aria-pressed="true">Zurück zu der Projektliste</a>
+        @if (@ViewBag.IsAuthorized != null && userName != null)
+        {
+            if (userName.ToString().Contains(@ViewBag.IsAuthorized))
+            {
+                <a href="@Url.Action("Edit", "Project", new { id = Model.Id })" class="btn btn-primary float-right btn-lg" role="button" aria-pressed="true">Bearbeiten</a>
+            }
+        }
+    </p>
+
+    <hr>
+    @for (int i = 0; i < Model.Messages.Count; i++)
+    {
+        <div class="modal fade" id="reply@(i)" tabindex="-1" role="dialog" aria-labelledby="userListeModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="userListeModalLabel">Nachrichtenverlauf</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            @for (int j = 0; j < Model.Messages[i].MessageReplies.Count; j++)
+                            {
+                                <li>
+                                    @Model.Messages[i].MessageReplies[j].Author schrieb am @Model.Messages[i].MessageReplies[j].Date.ToString()
+                                    : @Model.Messages[i].MessageReplies[j].Message
+                                </li>
+                            }
+
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</section>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+    function DownloadFile(fileId) {
+        $("#hfFileId").val(fileId);
+        $("#btnDownload")[0].click();
+    };
+
+</script>
+
+@section scripts {
+    <!--Script references. -->
+    <!--The jQuery library is required and is referenced by default in _Layout.cshtml. -->
+    <!--Reference the SignalR library. -->
+    <script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+    <!--Reference the autogenerated SignalR hub script. -->
+    <script src="~/signalr/hubs"></script>
+    <!--SignalR script to update the chat page and send messages.-->
+    <script>
+        $(function () {
+            // Reference the auto-generated proxy for the hub.
+            var chat = $.connection.chatHub;
+            // Create a function that the hub can call back to display messages.
+            chat.client.addNewMessageToPage = function (name, message) {
+                var text = document.getElementById("text").value += htmlEncode(name) + htmlEncode(message) + '\n';
+                checkTextareaHeight(text);
+            };
+            chat.client.isOnline = function (name, message) {
+                var text = document.getElementById("user").value += htmlEncode(name) + htmlEncode(message) + '\n';
+                checkTextareaHeight(text);
+            };
+
+
+            chat.client.privatChat = function (name, message) {
+                var text = document.getElementById("text").value += htmlEncode("Privat: "+name) + htmlEncode(message) + '\n';
+                checkTextareaHeight(text);
+
+            };
+
+            chat.client.isOnline = function (name, message) {
+
+                var text = document.getElementById("user").value += htmlEncode(name)+'\n';
+                checkTextareaHeight(text);
+            };
+
+
+
+            $('#message').focus();
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+
+
+                chat.server.joinGroup("Tester","home");
+
+
+                $('#btnSendGroup').click(function () {
+                    chat.server.sendGroups("Tester","home", $('#messageGroup').val());
+                });
+
+                $('#btnPrivat').click(function () {
+                    chat.server.sendPrivat("Tester", $('#messageGroup').val(), $('#privat').val());
+                });
+
+
+            });
+        });
+        // This optional function html-encodes messages for display in the page.
+
+            function checkTextareaHeight(text) {
+                text = this.text;
+
+                if (text.selectionStart == text.selectionEnd) {
+                    text.scrollTop = text.scrollHeight;
+                }
+            }
+        function htmlEncode(value) {
+            var encodedValue = $('<div />').text(value).html();
+            return encodedValue;
+        }
+        function fillModel() {
+            var chatModel = {}
+            chatModel.id = 0;
+            chatModel.message = $("msg").val();
+            chatModel.user = "@User.Identity.Name";
+            chatModel.timeStamp = Date.now();
+        }
+        //image preview
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                var file = input.files[0];
+                if (file.type.match('pdf.*') || file.type.match('image.*')) {
+                    $('#noPreview').css('display', 'none')
+                    $('#blah').css('display', 'inline')
+
+                    reader.onload = function (e) {
+                        $('#blah').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                    $('#myModal').css('display', 'inline')
+                }
+                else {
+                    $('#blah').css('display', 'none')
+                    $('#noPreview').css('display', 'inline')
+                }
+            }
+        }
+        $("#imgInp").change(function () {
+            readURL(this);
+        });
+    </script>
+    <!--BEGIN Frontend default dynamic initials profile picture-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+}

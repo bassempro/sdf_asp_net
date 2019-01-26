@@ -5,15 +5,19 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
+
 using sdf_asp_net.Models;
+[assembly: OwinStartup(typeof(sdf_asp_net.Startup))]
 
 namespace sdf_asp_net
 {
     public partial class Startup
     {
+
         // Weitere Informationen zum Konfigurieren der Authentifizierung finden Sie unter https://go.microsoft.com/fwlink/?LinkId=301864.
         public void ConfigureAuth(IAppBuilder app)
         {
+
             // Konfigurieren des db-Kontexts, des Benutzer-Managers und des Anmelde-Managers für die Verwendung einer einzelnen Instanz pro Anforderung.
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);

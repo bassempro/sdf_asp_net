@@ -1,0 +1,273 @@
+﻿@model sdf_asp_net.ViewModels.ProjectViewModel
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Meine ASP.NET-Anwendung</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    @Styles.Render("~/Content/CSS/StyleSheet.css")
+
+
+
+
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="width:auto;">
+        <a class="navbar-brand" href="#">PKP</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Index", "Project")">Startseite</a>
+                </li>
+                @*<li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("About", "Home")">Info</a>
+                </li>*@
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("Contact", "Home")">Kontakt</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="@Url.Action("MyCalendar", "Home")">Terminkalender</a>
+                </li>
+                @Html.Partial("_LoginPartial")
+            </ul>
+        </div>
+    </nav>
+    <!--BEGIN Frontend default dynamic initials profile picture-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        function myfunction(member) {
+            var divId = "profileImage" + member;
+            var intials = member.charAt(0);
+            var rand = Math.floor(0xfffff * Math.random());
+            var color = '#' + rand;
+            document.getElementById(divId).style.backgroundColor = color;
+            document.getElementById(divId).style.borderRadius = '50%';
+            document.getElementById(divId).style.borderStyle = 'solid';
+            document.getElementById(divId).style.borderColor = '#fff';
+            document.getElementById(divId).style.borderWidth = '1px';
+            document.getElementById(divId).style.width = '50px';
+            document.getElementById(divId).style.height = '50px';
+            document.getElementById(divId).style.fontSize = '20px';
+            var profileImage = document.getElementById(divId).innerHTML = intials;
+        }
+        function myfunction2(member, i) {
+            var divId = "profileImage" + member + i;
+            var intials = member.charAt(0);
+            var rand = Math.floor(0xfffff * Math.random());
+            var color = '#' + rand;
+            document.getElementById(divId).style.backgroundColor = color;
+            document.getElementById(divId).style.borderRadius = '50%';
+            document.getElementById(divId).style.borderStyle = 'solid';
+            document.getElementById(divId).style.borderColor = '#fff';
+            document.getElementById(divId).style.borderWidth = '1px';
+            document.getElementById(divId).style.width = '80px';
+            document.getElementById(divId).style.height = '80px';
+            document.getElementById(divId).style.fontSize = '40px';
+            var profileImage = document.getElementById(divId).innerHTML = intials;
+        }
+    </script>
+    <!--END Frontend default dynamic initials profile picture-->
+
+    <div class="row">
+        <div class="leftcolumn">
+            <div class="card">
+                @RenderBody()
+
+            </div>
+        </div>
+        <div class="rightcolumn">
+            <div class="card">
+
+                <ul class="list-group list-group-flush">
+                    <button id="modal_btn" type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#userListeModal"> Nutzerliste </button>
+                    @*<button type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#chatModal"> Chat </button>*@
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="list-group" id="discussion" style="width: a; height: auto; background: lavender;">
+                    <a href="#" class="list-group-item list-group-item-action active">
+                        Online Nutzer
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    
+
+    <div class="modal fade" id="userListeModal" tabindex="-1" role="dialog" aria-labelledby="userListeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userListeModalLabel">Nutzerliste</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                        @foreach (var member in Model.Member)
+                        {
+                            string value = "";
+                            string key = Convert.ToString(member);
+
+                            if (@ViewBag.Images.TryGetValue(key.Trim(), out value))
+                            {
+                                <li class="list-group-item list-group-item-info">
+                                    <div style="display: inline-block;">
+                                        <img id="profileImg" src="@value" />
+                                    </div>
+                                    <div style="display: inline-block;">
+                                        <div>
+                                            @member
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="list-group-item list-group-item-info">
+                                    <div style="display: inline-block;">
+                                        <div id="@member" class="test">
+
+                                        </div>
+                                    </div>
+                                    <div style="display: inline-block;">
+                                        <div>
+                                            @member
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <script type="text/javascript">
+                                        var member = @Html.Raw(Json.Encode(@member));
+
+                                        var applicationArea = document.getElementById(member);
+                                        var applicationArea2 = document.getElementById(member + "1234");
+
+                                        var newDiv = document.createElement("div");
+                                        newDiv.id = 'profileImage' + member;
+                                           newDiv.class = 'test';
+                                        applicationArea.appendChild(newDiv);
+
+                                        myfunction(member);
+                                </script>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="chatModal" tabindex="-1" role="dialog" aria-labelledby="chatModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chatModalLabel">Nutzerliste</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    }
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    @*@section scripts {
+        <!--Script references. -->
+        <!--The jQuery library is required and is referenced by default in _Layout.cshtml. -->
+        <!--Reference the SignalR library. -->
+        <script src="~/Scripts/jquery.signalR-2.4.0.min.js"></script>
+        <!--Reference the autogenerated SignalR hub script. -->
+        <script src="~/signalr/hubs"></script>
+        <!--SignalR script to update the chat page and send messages.-->
+        <script>
+        $(function () {
+            // Reference the auto-generated proxy for the hub.
+            var chat = $.connection.chatHub;
+            // Create a function that the hub can call back to display messages.
+            chat.client.addNewMessageToPage = function (name, message) {
+
+                $('#discussion').append('<li><strong>' + htmlEncode(name)
+                    + '</strong>: ' + htmlEncode(message) + '</li>');
+            };
+
+            chat.client.addNewMessageToAll = function (name, message) {
+
+                $('#discussion').append('<li><strong>' + htmlEncode(name)
+                    + '</strong>: ' + htmlEncode(message) + '</li>');
+            };
+
+
+
+
+
+            $('#message').focus();
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+
+                $('#btnSendAll').click(function () {
+                    chat.server.sendAll("@User.Identity.Name", $('#messageAll').val());
+                });
+
+
+
+            chat.server.joinGroup("@User.Identity.Name","@Html.DisplayFor(model => model.Name)");
+
+
+                $('#btnSendGroup').click(function () {
+                    chat.server.sendGroups("@User.Identity.Name","@Html.DisplayFor(model => model.Name)", $('#messageGroup').val());
+                });
+
+
+
+            });
+        });
+        // This optional function html-encodes messages for display in the page.
+        function htmlEncode(value) {
+            var encodedValue = $('<div />').text(value).html();
+            return encodedValue;
+        }
+        function fillModel() {
+            var chatModel = {}
+            chatModel.id = 0;
+            chatModel.message = $("msg").val();
+            chatModel.user = "@User.Identity.Name";
+            chatModel.timeStamp = Date.now();
+            }
+        </script>
+    }*@
+
+
+</body>
+</html>

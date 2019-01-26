@@ -2,86 +2,160 @@
 @{
     ViewBag.Title = "Verwalten";
 }
+<style>
+    #profileImage {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: #512DA8;
+        font-size: 35px;
+        color: #fff;
+        text-align: center;
+        line-height: 150px;
+        margin: 20px 0;
+    }
+    #profileImg {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin: 20px 0;
+    }
+</style>
 
-<h2>@ViewBag.Title.</h2>
+<!--BEGIN Frontend default dynamic initials profile picture-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<span id="firstName" style="display: none;">@Model.UserName</span>
+<script>
+    $(document).ready(function () {
+        var firstName = $('#firstName').text();
+        var intials = $('#firstName').text().charAt(0);
+        var profileImage = $('#profileImage').text(intials);
+    });
+</script>
+<!--END Frontend default dynamic initials profile picture-->
+
+<h2>Kontoeinstellungen</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
-    <h4>Kontoeinstellungen ändern</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>Kennwort:</dt>
-        <dd>
-            [
-            @if (Model.HasPassword)
+    <div class="row">
+        <div class="col-sm-2">
+            @if (Model.ProfileImage == null)
             {
-                @Html.ActionLink("Kennwort ändern", "ChangePassword")
+                <div id="profileImage"></div>
             }
-            else
+            @if (Model.ProfileImage != null)
             {
-                @Html.ActionLink("Erstellen", "SetPassword")
+                <img id="profileImg" src="@ViewBag.imgSrc" />
             }
-            ]
-        </dd>
-        <dt>Externe Anmeldungen:</dt>
-        <dd>
-            @Model.Logins.Count [
-            @Html.ActionLink("Verwalten", "ManageLogins") ]
-        </dd>
-        @*
-            Telefonnummern können als zweiter Faktor in einem zweistufigen Authentifizierungssystem verwendet werden.
-             
-             In <a href="https://go.microsoft.com/fwlink/?LinkId=403804">diesem Artikel</a>
-                finden Sie Details zum Einrichten dieser ASP.NET-Anwendung für die Unterstützung der zweistufigen Authentifizierung mithilfe von SMS.
-             
-             Heben Sie die Auskommentierung für den folgenden Block auf, nachdem Sie die zweistufige Authentifizierung eingerichtet haben.
-        *@
-        @*  
-            <dt>Telefonnummer:</dt>
+
+            <dt>Nutzername:</dt>
             <dd>
-                @(Model.PhoneNumber ?? "None")
-                @if (Model.PhoneNumber != null)
+
+                @if (Model.HasPassword)
                 {
-                    <br />
-                    <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
-                    using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <text>[<input type="submit" value="Entfernen" class="btn-link" />] </text>
-                    }
-                }
-                else
-                {
-                    <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
+                    @Model.UserName
                 }
             </dd>
-        *@
-        <dt>Zweistufige Authentifizierung:</dt>
-        <dd>
-            <p>
-                Es sind keine Anbieter für die zweistufige Authentifizierung konfiguriert. In <a href="https://go.microsoft.com/fwlink/?LinkId=403804">diesem Artikel</a>
-                finden Sie Details zum Einrichten dieser ASP.NET-Anwendung für die Unterstützung der zweistufigen Authentifizierung.
-            </p>
-            @*@if (Model.TwoFactor)
+        </div>
+        <div class="col-sm-10">
+            <dt>Profilbild:</dt>
+            <dd>
+                @using (Html.BeginForm("ChangeProfileImage", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
-                    using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <text>Aktiviert
-                        <input type="submit" value="Deaktivieren" class="btn btn-link" />
-                        </text>
-                    }
+                <div class="form-group">
+                    
+                    <div class="input-group">
+                        
+                        <div class="input-group-append" id="button-addon4">
+                            <input type="file" name="postedFile" />
+                            <input type="submit" value="Profilbild speichern" class="btn btn-success" />
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                }
+
+            </dd>
+            <dt>Kennwort:</dt>
+            <dd>
+                [
+                @if (Model.HasPassword)
+                {
+                    @Html.ActionLink("Kennwort ändern", "ChangePassword")
                 }
                 else
                 {
-                    using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    @Html.ActionLink("Erstellen", "SetPassword")
+                }
+                ]
+            </dd>
+            <dt>Externe Anmeldungen:</dt>
+            <dd>
+                @Model.Logins.Count [
+                @Html.ActionLink("Verwalten", "ManageLogins") ]
+            </dd>
+            @*
+                Telefonnummern können als zweiter Faktor in einem zweistufigen Authentifizierungssystem verwendet werden.
+
+                 In <a href="https://go.microsoft.com/fwlink/?LinkId=403804">diesem Artikel</a>
+                    finden Sie Details zum Einrichten dieser ASP.NET-Anwendung für die Unterstützung der zweistufigen Authentifizierung mithilfe von SMS.
+
+                 Heben Sie die Auskommentierung für den folgenden Block auf, nachdem Sie die zweistufige Authentifizierung eingerichtet haben.
+            *@
+            @*
+                <dt>Telefonnummer:</dt>
+                <dd>
+                    @(Model.PhoneNumber ?? "None")
+                    @if (Model.PhoneNumber != null)
                     {
-                        @Html.AntiForgeryToken()
-                        <text>Deaktiviert
-                        <input type="submit" value="Aktivieren" class="btn btn-link" />
-                        </text>
+                        <br />
+                        <text>[&nbsp;&nbsp;@Html.ActionLink("Change", "AddPhoneNumber")&nbsp;&nbsp;]</text>
+                        using (Html.BeginForm("RemovePhoneNumber", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <text>[<input type="submit" value="Entfernen" class="btn-link" />] </text>
+                        }
                     }
-                }*@
-        </dd>
-    </dl>
+                    else
+                    {
+                        <text>[&nbsp;&nbsp;@Html.ActionLink("Add", "AddPhoneNumber")
+                    }
+                </dd>
+            *@
+            <dt>Zweistufige Authentifizierung:</dt>
+            <dd>
+                <p>
+                    Es sind keine Anbieter für die zweistufige Authentifizierung konfiguriert. In <a href="https://go.microsoft.com/fwlink/?LinkId=403804">diesem Artikel</a>
+                    finden Sie Details zum Einrichten dieser ASP.NET-Anwendung für die Unterstützung der zweistufigen Authentifizierung.
+                </p>
+                @*@if (Model.TwoFactor)
+                    {
+                        using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <text>Aktiviert
+                            <input type="submit" value="Deaktivieren" class="btn btn-link" />
+                            </text>
+                        }
+                    }
+                    else
+                    {
+                        using (Html.BeginForm("EnableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <text>Deaktiviert
+                            <input type="submit" value="Aktivieren" class="btn btn-link" />
+                            </text>
+                        }
+                    }*@
+            </dd>
+        </div>
+
+    </div>
+
+    <hr />
+
 </div>

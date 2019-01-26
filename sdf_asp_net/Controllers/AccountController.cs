@@ -22,7 +22,7 @@ namespace sdf_asp_net.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +34,9 @@ namespace sdf_asp_net.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -68,27 +68,29 @@ namespace sdf_asp_net.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
+                var user = await UserManager.FindAsync(model.Email, model.Password);
 
-            // Anmeldefehler werden bezüglich einer Kontosperre nicht gezählt.
-            // Wenn Sie aktivieren möchten, dass Kennwortfehler eine Sperre auslösen, ändern Sie in "shouldLockout: true".
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Ungültiger Anmeldeversuch.");
-                    return View(model);
+                if (user != null)
+                {
+                    if (user.EmailConfirmed == true)
+                    {
+                        await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+                        return RedirectToAction("Index", "Project");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Confirm Email Address.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid username or password.");
+                }              
             }
+                // If we got this far, something failed, redisplay form
+                return View(model);
         }
 
         //
@@ -120,7 +122,7 @@ namespace sdf_asp_net.Controllers
             // Wenn ein Benutzer in einem angegebenen Zeitraum falsche Codes eingibt, wird das Benutzerkonto 
             // für einen bestimmten Zeitraum gesperrt. 
             // Sie können die Einstellungen für Kontosperren in "IdentityConfig" konfigurieren.
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -152,18 +154,32 @@ namespace sdf_asp_net.Controllers
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                user.Email = model.Email;
+                user.EmailConfirmed = false;
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // Weitere Informationen zum Aktivieren der Kontobestätigung und Kennwortzurücksetzung finden Sie unter https://go.microsoft.com/fwlink/?LinkID=320771
-                    // E-Mail-Nachricht mit diesem Link senden
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Konto bestätigen", "Bitte bestätigen Sie Ihr Konto. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>");
+                    // await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                    return RedirectToAction("Index", "Home");
+                    System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
+                         new System.Net.Mail.MailAddress("testi777@web.de", "Konto Verifizierung"),
+                             new System.Net.Mail.MailAddress(user.Email));
+                    m.Subject = "Email confirmation";
+                    m.Body = string.Format("Dear {0}< BR /> Danke für Ihre Registrierung , bitte klicken Sie den Link hier, um Ihr Konto zu bestätigen: < a href =\"{1} title =\"User Email Confirm\">{1}</a>",
+                    user.UserName, Url.Action("ConfirmEmail", "Account", new { Token = user.Email, Email = user.Email }, Request.Url.Scheme));
+                    m.IsBodyHtml = true;
+                    System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.web.de");
+                    smtp.Credentials = new System.Net.NetworkCredential("testi777@web.de", "Testlauf789");
+                    m.IsBodyHtml = true;
+                    // smtp.ServerCertificateValidationCallback = () => true;
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient();
+                    client.EnableSsl = true;
+                    smtp.Send(m);
+
+                    //comment out the block until this line for testing purposes (no email confirmation part 1)
+                    return RedirectToAction("Confirm", "Account", new {  emi  = user.Email });
                 }
                 AddErrors(result);
             }
@@ -172,17 +188,48 @@ namespace sdf_asp_net.Controllers
             return View(model);
         }
 
+        [AllowAnonymous]
+        public ActionResult Confirm(string emi)
+        {
+            ViewBag.Email = emi;
+            return View();
+        }
+
+
+
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
-        public async Task<ActionResult> ConfirmEmail(string userId, string code)
+        public async Task<ActionResult> ConfirmEmail(string Token, string Email)
         {
-            if (userId == null || code == null)
+            ApplicationUser user = this.UserManager.FindByEmail(Token);
+            if (user != null)
             {
-                return View("Error");
+                if (user.Email == Email)
+                {
+                    user.EmailConfirmed = true;
+                    await UserManager.UpdateAsync(user);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
+                    //comment out the block until this line for testing purposes (no email confirmation part 2)
+                    return RedirectToAction("EmailConfirmed", "Account", new { ConfirmedEmail = user.Email });
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Project", new { Email = user.Email });
+                }
             }
-            var result = await UserManager.ConfirmEmailAsync(userId, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+            else
+            {
+                return RedirectToAction("Index", "Project", new { Email = "" });
+            }
+        }
+
+        public ActionResult Emailconfirmed(String Email)
+        {
+            ViewBag.Email = Email;
+            return View();
+
         }
 
         //
@@ -203,18 +250,35 @@ namespace sdf_asp_net.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+
+
+                if (user == null)
                 {
-                    // Nicht anzeigen, dass der Benutzer nicht vorhanden ist oder nicht bestätigt wurde.
-                    return View("ForgotPasswordConfirmation");
+
+                    return RedirectToAction("Index", "Project", new { Email = "" });
                 }
 
                 // Weitere Informationen zum Aktivieren der Kontobestätigung und Kennwortzurücksetzung finden Sie unter https://go.microsoft.com/fwlink/?LinkID=320771
                 // E-Mail-Nachricht mit diesem Link senden
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Kennwort zurücksetzen", "Bitte setzen Sie Ihr Kennwort zurück. Klicken Sie dazu <a href=\"" + callbackUrl + "\">hier</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
+            new System.Net.Mail.MailAddress("testi777@web.de", "SDF"),
+            new System.Net.Mail.MailAddress(user.Email));
+                m.Subject = "Password Recovery";
+                m.Body = string.Format("Dear {0}< BR /> To Reset your Password , please click on the below link to complete your Password Reset: < a href =\"{1} title =\"User Reset Password\">{1}</a>",
+                user.UserName, Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, Request.Url.Scheme));
+                m.IsBodyHtml = true;
+                System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient("smtp.web.de");
+                smtp.Credentials = new System.Net.NetworkCredential("testi777@web.de", "Testlauf789");
+                m.IsBodyHtml = true;
+                // smtp.ServerCertificateValidationCallback = () => true;
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient();
+                client.EnableSsl = true;
+                smtp.Send(m);
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // Wurde dieser Punkt erreicht, ist ein Fehler aufgetreten; Formular erneut anzeigen.
