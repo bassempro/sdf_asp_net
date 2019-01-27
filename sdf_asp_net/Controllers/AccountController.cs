@@ -76,8 +76,18 @@ namespace sdf_asp_net.Controllers
                 {
                     if (user.EmailConfirmed == true)
                     {
-                        await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-                        return RedirectToAction("Index", "Project");
+
+                        string ReturnUrl = Request.QueryString["ReturnUrl"];
+                        if (ReturnUrl != null)
+                        {
+
+                            await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+                            Response.Redirect(ReturnUrl, false);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Project");
+                        }
                     }
                     else
                     {
