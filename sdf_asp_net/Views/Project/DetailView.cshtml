@@ -324,8 +324,8 @@
                                     <small class="mb-1">@Model.Messages[i].FileContentType</small>
                                 </div>
                             </li>
-                            if (@ViewBag.IsAuthorized != null && userName != null)
-                            {
+//                            if (@ViewBag.IsAuthorized != null && userName != null)
+//                            {
                                 if (userName.ToString().Contains(@ViewBag.IsAuthorized) && @Model.Messages[i].FileName.ToString().Length > 0)
                                 {
                                     <a href="javascript:;" class="btn btn-success float-right" onclick="DownloadFile(@Model.Messages[i].Id)">Download</a>
@@ -339,7 +339,7 @@
                                         <input type="submit" id="btnUpload" value="Senden" class="btn btn-primary" />
                                     </div>
                                 }
-                            }
+                            //}
                             if (Model.Messages[i].MessageReplies.Count > 0)
                             {
                                 <button type="button" class="btn btn-success float-right btn-lg" data-toggle="modal" data-target="#reply@(i)">Diskussion</button>
@@ -356,10 +356,10 @@
     <br />
     @using (Html.BeginForm("Message", "Project", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
-        if (@ViewBag.IsAuthorized != null && userName != null)
-        {
-            if (userName.ToString().Contains(@ViewBag.IsAuthorized))
-            {
+        //if (@ViewBag.IsAuthorized != null && userName != null)
+        //{
+        //    if (userName.ToString().Contains(@ViewBag.IsAuthorized))
+        //    {
                 <div class="input-group">
                     <input type="text" id="messageInput" name="message" class="form-control" placeholder="Deine Nachricht" aria-label="Message" aria-describedby="button-addon4">
                     <input type="hidden" name="projectId" class="form-control" value="@Html.DisplayFor(model => model.Id)" aria-label="Message" aria-describedby="button-addon4">
@@ -393,8 +393,8 @@
                         <input type="submit" id="btnUpload" value="upload" class="btn btn-primary" />
                     </div>
                 </div>
-            }
-        }
+            @*}
+        }*@
     }
 
     <br />
