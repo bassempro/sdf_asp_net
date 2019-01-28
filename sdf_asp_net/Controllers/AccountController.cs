@@ -76,12 +76,11 @@ namespace sdf_asp_net.Controllers
                 {
                     if (user.EmailConfirmed == true)
                     {
-
+                        await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
                         string ReturnUrl = Request.QueryString["ReturnUrl"];
-                        if (ReturnUrl != null)
+                        if (ReturnUrl != null && ReturnUrl != "/Home/Index")
                         {
 
-                            await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
                             Response.Redirect(ReturnUrl, false);
                         }
                         else
